@@ -1,0 +1,29 @@
+{
+  "name": "toweljs",
+  "version": "1.0.0",
+  "description": "Trabalho de conclusão de curso. Engine em JavaScript utilizando WebGL.",
+  "main": "index.js",
+  "scripts": {
+    "babel": "babel --presets es2015 js/main.js -o build/main.bundle.js",
+    "start": "http-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gzanluca_FURB@bitbucket.org/gcgfurb/gabrielzanluca.git"
+  },
+  "keywords": [
+    "JavaScript",
+    "WebGL",
+    "Game",
+    "Engine"
+  ],
+  "author": "Gabriel Zanluca",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/gcgfurb/gabrielzanluca#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "http-server": "^0.11.1"
+  }
+}
