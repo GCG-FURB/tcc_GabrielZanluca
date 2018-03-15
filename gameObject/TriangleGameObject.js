@@ -4,11 +4,11 @@ import { Game } from "../game/Game";
 
 export class TriangleGameObject extends GameObject{
 
-    constructor(x, y, points) {
+    constructor(x, y, points, color) {
         super(x, y);
         this.__points = points;
         let gl = new Game().canvas
-        this.listComponents.addComponent(new TriangleRenderComponent(this, gl, points));
+        this.listComponents.addComponent(new TriangleRenderComponent(this, gl, points, color));
     }
 
     get points() {

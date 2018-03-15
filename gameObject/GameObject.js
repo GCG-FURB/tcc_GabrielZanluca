@@ -22,6 +22,10 @@ export class GameObject {
     get tag() {
         return undefined;
     }
+
+    get x() {
+        return this.__oringin.x;
+    }
     
     onLoad () {}
 
@@ -31,7 +35,6 @@ export class GameObject {
 			    component.onDestroy();
 		    }
         }
-
         //this.__layer.listGameObjects =  ArrayUtils.removeElement(this.__layer.listGameObjects, this);
     }
 

@@ -1,6 +1,7 @@
 import { Scene } from "../game/Scene";
 import { Game } from "../game/Game";
 import { TriangleGameObject } from "../gameObject/TriangleGameObject";
+import { Color } from "../gameObject/Color";
 
 
 
@@ -22,8 +23,10 @@ import { TriangleGameObject } from "../gameObject/TriangleGameObject";
       // @ts-ignore
       let canvasGL = canvas.getContext("experimental-webgl");
       let game = new Game(canvasGL, scene);
-      let triangle = new TriangleGameObject(0, 0, positions);
-      let triangle2 = new TriangleGameObject(0, 0, positions2);
+      let color1 = new Color({r : 1});
+      let color2 = new Color({b : 1});
+      let triangle = new TriangleGameObject(0, 0, positions, color1);
+      let triangle2 = new TriangleGameObject(0, 0, positions2, color2);
   
       scene.addGameObject(triangle);
       scene.addGameObject(triangle2);

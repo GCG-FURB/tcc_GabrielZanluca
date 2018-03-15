@@ -6,7 +6,8 @@ export class RenderComponent extends Component {
         super(owner);
         this.__vertexShader = JSUtils.createShader(gl, gl.VERTEX_SHADER, this.vertexShaderSource());
         this.__fragmentShader = JSUtils.createShader(gl, gl.FRAGMENT_SHADER, this.fragmentShaderSource());                
-        this.__program =  undefined;
+        this.__program = undefined;
+        this.__colorLocation = undefined;
         //this.initialize();
     }
 
@@ -24,6 +25,10 @@ export class RenderComponent extends Component {
 
     get fragmentShader () {
         return this.__fragmentShader;
+    }
+
+    get program() {
+        return this.__program;
     }
     
 }
