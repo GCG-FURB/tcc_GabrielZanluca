@@ -1,6 +1,7 @@
 import {Scene} from "./Scene";
 import { ComponentList } from "../utils/ComponentList";
 import { RenderSystem } from "../system/RenderSystem";
+import { mat4 } from "../libs/gl-matrix/gl-matrix";
 
 let instace = undefined;
 
@@ -15,6 +16,7 @@ export class Game {
             instace = this;
             //this.loadGame();
             this.startGameLoop();
+            this.__projection = mat4.create();
         }
 
         return instace;
@@ -28,12 +30,16 @@ export class Game {
         return this.__scene;
     }
 
+    get projection(){
+        return this.__projection;
+    }
+
     startGameLoop() {
         let Loop = () => {
+            this.__requestAnimFrame = window.requestAnimationFrame (Loop);
             this.gameLoop();
         };
-
-        this.____requestAnimFrame = window.requestAnimationFrame (Loop);
+        
         Loop();
     }
 

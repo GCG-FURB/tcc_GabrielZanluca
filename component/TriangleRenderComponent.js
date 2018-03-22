@@ -60,23 +60,23 @@ export class TriangleRenderComponent extends RenderComponent {
             gl.bindBuffer(gl.ARRAY_BUFFER, this.__positionBuffer);
 
             // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
-            let sizev = 2;          // 2 components per iteration
-            let typev = gl.FLOAT;   // the data is 32bit floats
-            let normalizev = false; // don't normalize the data
-            let stridev = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
-            let offsetv = 0;        // start at the beginning of the buffer
-            gl.vertexAttribPointer(this.__positionAttributeLocation, sizev, typev, normalizev, stridev, offsetv);
+            let size = 2;          // 2 components per iteration
+            let type = gl.FLOAT;   // the data is 32bit floats
+            let normalize = false; // don't normalize the data
+            let stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
+            let offset = 0;        // start at the beginning of the buffer
+            gl.vertexAttribPointer(this.__positionAttributeLocation, size, type, normalize, stride, offset);
         }
 
         {
             gl.enableVertexAttribArray(this.__colorLocation);
             gl.bindBuffer(gl.ARRAY_BUFFER, this.__colorBuffer);
-            let sizef = 4;
-            let typef = gl.FLOAT;
-            let normalizef = false;
-            let stridef = 0;
-            let offsetf = 0;
-            gl.vertexAttribPointer(this.__colorLocation, sizef, typef, normalizef, stridef, offsetf);
+            let size = 4;
+            let type = gl.FLOAT;
+            let normalize = false;
+            let stride = 0;
+            let offset = 0;
+            gl.vertexAttribPointer(this.__colorLocation, size, type, normalize, stride, offset);
         }
         let primitiveType = gl.TRIANGLES;
         let count = 3;
@@ -84,7 +84,7 @@ export class TriangleRenderComponent extends RenderComponent {
         gl.drawArrays(primitiveType, offset, count);
     }
 
-    get tag () {
+    static get tag () {
         return "TRIANGLE_RENDER_COMPONENT"
     }
 }

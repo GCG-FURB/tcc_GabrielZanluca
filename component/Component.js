@@ -14,7 +14,6 @@ export class Component {
         this.__id = JSUtils.generateUUID();
         this.__enabled = true;
         this.__owner = owner;
-        this.__tag = undefined;
     }
 
     get id(){
@@ -27,10 +26,6 @@ export class Component {
 
     set enabled(enabled) {
         this.__enabled = enabled;
-    }
-
-    get tag(){
-        return this.__tag
     }
 
     get owner() {
@@ -54,15 +49,15 @@ export class Component {
     onMouseMove(x, y) {}
 
     onBeforeRender(context){}
-
     
     /**
      * 
      * 
-     * @param {WebGLRenderingContext} context 
+     * @param {WebGLRenderingContext} context
+     * @param {Array} projctionMareix  
      * @memberof Component
      */
-    onRender(context){}
+    onRender(context, projctionMareix){}
 
     onUpdate(delta){}
 
