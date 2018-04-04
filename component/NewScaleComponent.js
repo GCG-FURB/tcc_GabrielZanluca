@@ -2,9 +2,9 @@ import { Component } from "./Component";
 import { vec3, mat4 } from "../libs/gl-matrix/gl-matrix";
 import { GameObject } from "../gameObject/GameObject";
 
-export class ScaleComponent extends Component{
+export class NewScaleComponent extends Component{
     /**
-     * Creates an instance of ScaleComponent.
+     * Creates an instance of NewScaleComponent. 
      * @memberof ScaleComponent
      */
     constructor({owner}) {
@@ -13,30 +13,27 @@ export class ScaleComponent extends Component{
     }
     
     get x() {
-        return this.__scale[0];
+        return this.owner.matrix[0];
     }
 
     get y() {
-        return this.__scale[1];
+        return this.owner.matrix[5];
     }
 
     get z() {
-        return this.__scale[2];
+        return this.owner.matrix[10];
     }
 
     set x(x) {
-        this.__scale[0] = x;
-        mat4.scale(this.owner.matrix, this.owner.matrix, [x, 1, 1]);
+        this.owner.matrix[0] = x;
     }
 
     set y(y) {
-        this.__scale[1] = y;
-        mat4.scale(this.owner.matrix, this.owner.matrix, [1, y, 1]);
+        this.owner.matrix[5] = y;
     }
     
     set z(z) {
-        this.__scale[2] = z;
-        mat4.scale(this.owner.matrix, this.owner.matrix, [1, 1, z]);
+        this.owner.matrix[10] = z;
     }
 
     scale(matrix){
@@ -44,10 +41,10 @@ export class ScaleComponent extends Component{
     }
 
     get tag(){
-        return ScaleComponent.tag;
+        return NewScaleComponent.tag;
     }
 
     static get tag(){
-        return "SCALE_COMPONENT";
+        return "NEW_SCALE_COMPONENT";
     }
 }

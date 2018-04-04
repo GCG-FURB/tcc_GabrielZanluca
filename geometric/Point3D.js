@@ -6,4 +6,12 @@ export class Point3D extends Point2D{
         super(x,y);
         this.__z = z;
     }
+
+    get z() {
+        return this.__z;
+    }
+
+    set z(z) {
+        this.__z = z;
+    }
 }

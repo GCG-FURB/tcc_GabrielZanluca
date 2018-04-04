@@ -1,14 +1,20 @@
 import { GameObject } from "./GameObject";
 import { TriangleRenderComponent } from "../component/TriangleRenderComponent";
 import { Game } from "../game/Game";
+import { Point3D } from "../geometric/Point3D";
 
 export class TriangleGameObject extends GameObject{
 
-    constructor(x, y, points, color) {
-        super(x, y);
+    constructor({oringin, color, points}) {
+        super({oringin : oringin, color});
         this.__points = points;
-        let gl = new Game().canvas
-        this.listComponents.addComponent(new TriangleRenderComponent(this, gl, points, color));
+        this.listComponents.addComponent(new TriangleRenderComponent({owner : this, positions : points}));
+        this.render.onLoad();
+        this.listComponents[TriangleRenderComponent.tag].color = color;
+    }
+
+    get render(){
+        return this.listComponents[TriangleRenderComponent.tag];
     }
 
     get points() {

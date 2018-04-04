@@ -1,3 +1,5 @@
+import { Game } from "../game/Game";
+
 /**
  * 
  * 
@@ -25,12 +27,13 @@ export class JSUtils {
      * 
      * 
      * @static
-     * @param {Object} gl 
      * @param {Number} type 
      * @param {String} source 
      * @memberof JSUtils
      */
-    static createShader(gl, type, source) {
+    static createShader(type, source) {
+        let game = new Game();
+        let gl = game.canvas; 
         let shader = gl.createShader(type);
         gl.shaderSource(shader, source);
         gl.compileShader(shader);
@@ -43,7 +46,9 @@ export class JSUtils {
         gl.deleteShader(shader);
     }
 
-    static createProgram(gl, vertexShader, fragmentShader) {
+    static createProgram(vertexShader, fragmentShader) {
+        let game = new Game();
+        let gl = game.canvas;
         let program = gl.createProgram();
         gl.attachShader(program, vertexShader);
         gl.attachShader(program, fragmentShader);

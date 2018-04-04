@@ -12,7 +12,7 @@ export class Scene {
         this.__gameObjectList.push(gameObject);
         for (let key in gameObject.listComponents) {
                 let element = gameObject.listComponents[key];
-                element.onLoad();
+                //element.onLoad();
         }
     }
 }

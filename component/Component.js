@@ -10,7 +10,7 @@ export class Component {
      * Creates an instance of Component.
      * @memberof Component
      */
-    constructor(owner){
+    constructor({owner}){
         this.__id = JSUtils.generateUUID();
         this.__enabled = true;
         this.__owner = owner;

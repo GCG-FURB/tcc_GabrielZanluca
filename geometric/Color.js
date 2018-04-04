@@ -1,7 +1,23 @@
+/**
+ * function createMenu(config) {
+  config = Object.assign({
+    title: 'Foo',
+    body: 'Bar',
+    buttonText: 'Baz',
+    cancellable: true
+  }, config);
+  // configuração agora é: {title: "Order", body: "Bar", buttonText: "Send", cancellable: true}
+  // ...
+}
+ */
+
 export class Color {
-    
-    constructor({r = 0, g = 0, b = 0}){
-          Object.assign(this, {__r : r, __g : g, __b: b})
+    /**
+     * Creates an instance of Color.
+     * @memberof Color
+     */
+    constructor({r = 0, g = 0, b = 0, a = 1}){
+          Object.assign(this, {__r : r, __g : g, __b: b, __a : a})
     }
 
     get r() {
@@ -26,6 +42,14 @@ export class Color {
 
     set b(value) {
         this.__b = value;
+    }
+
+    set propertyName(value) {
+        this.__a = value;
+    }
+
+    get a() {
+        return this.__a;
     }
 
     /**

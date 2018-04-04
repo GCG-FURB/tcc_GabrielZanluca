@@ -1,10 +1,24 @@
 import { Component } from "./Component";
 import { vec3, mat4 } from "../libs/gl-matrix/gl-matrix";
+//import { GameObject } from "../gameObject/GameObject";
 
 export class TranslateComponent extends Component{
+    /**
+     * Creates an instance of TranslateComponent.
+     * 
+     * @memberof TranslateComponent
+     */
     constructor({owner}) {
-        super(owner);
+        super({owner : owner});
         this.__translation = vec3.create();
+    }
+
+    set translation(translation){
+        vec3.set(this.__translation, translation[0], translation[1], translation[2]);
+    }
+
+    get translation() {
+        return this.__translation;
     }
 
     get x() {

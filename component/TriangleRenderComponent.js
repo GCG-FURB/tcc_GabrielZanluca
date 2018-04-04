@@ -3,24 +3,30 @@ import { JSUtils } from "../utils/JSUtils";
 import { Game } from "../game/Game";
 
 export class TriangleRenderComponent extends RenderComponent {
-
-    constructor(owner, gl, positions, color) {
-        super(owner, gl);
+    /**
+     * Creates an instance of TriangleRenderComponent.
+     * @memberof TriangleRenderComponent
+     */
+    constructor({owner, positions}) {
+        super({owner});
         this.__positions = positions;
         this.__positionAttributeLocation = undefined;
         this.__positionBuffer =  undefined;
-        this.__color = color;
         this.__colorLocation = undefined;
-        this.__colorBuffer = undefined;
+        this.__colorBuffer = undefined;        
+        this.__numberOfFace = 1;
+        this.__numberOfVertexPerFace = 3;
     }
 
     vertexShaderSource() {
         return "attribute vec4 a_position; " +
-                "attribute vec4 a_color; " +
+                "attribute vec4 aVertexColor; " +
                 "varying vec4 v_color; " +
+                "uniform mat4 uModelViewMatrix; " +
+                "uniform mat4 uProjectionMatrix; "+
                 "void main() { " +                           
-                    "gl_Position = a_position; " +
-                    "v_color = a_color; " +
+                    "gl_Position = uProjectionMatrix * uModelViewMatrix * a_position; " +
+                    "v_color = aVertexColor; " +
                 "}"
     };
 
@@ -36,52 +42,60 @@ export class TriangleRenderComponent extends RenderComponent {
         super.onLoad();
         let game =  new Game();
         let gl = game.canvas;
-        this.__program = JSUtils.createProgram(gl, this.vertexShader, this.fragmentShader);
+
+        this.__program = JSUtils.createProgram(this.vertexShader, this.fragmentShader);
         this.__positionAttributeLocation = gl.getAttribLocation(this.__program, "a_position");
         this.__positionBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, this.__positionBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.__positions), gl.STATIC_DRAW);
 
-        this.__colorLocation = gl.getAttribLocation(this.program, "a_color");
-        this.__colorBuffer =  gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.__colorBuffer);
-        let colors = [this.__color.r, this.__color.g, this.__color.b, 1,
-                      this.__color.r, this.__color.g, this.__color.b, 1,
-                      this.__color.r, this.__color.g, this.__color.b, 1];
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW)
+        this.__modelViewMatrix = gl.getUniformLocation(this.__program, 'uModelViewMatrix');
+
+        this.__projectionMatrix = gl.getUniformLocation(this.__program, 'uProjectionMatrix');
     };
 
-    onRender(gl){
-        // Tell it to use our program (pair of shaders)
-        gl.useProgram(this.__program);
-        {
-            gl.enableVertexAttribArray(this.__positionAttributeLocation);
-            // Bind the position buffer.
-            gl.bindBuffer(gl.ARRAY_BUFFER, this.__positionBuffer);
+    onRender(gl, projctionMareix){
+        
+        let camera = new Game().camera;
 
+        {                       
             // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
             let size = 2;          // 2 components per iteration
             let type = gl.FLOAT;   // the data is 32bit floats
             let normalize = false; // don't normalize the data
             let stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
-            let offset = 0;        // start at the beginning of the buffer
+            let offset = 0;        // start at the beginning of the buffer             
+            // Bind the position buffer.
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.__positionBuffer);
             gl.vertexAttribPointer(this.__positionAttributeLocation, size, type, normalize, stride, offset);
+            gl.enableVertexAttribArray(this.__positionAttributeLocation);
         }
-
-        {
-            gl.enableVertexAttribArray(this.__colorLocation);
-            gl.bindBuffer(gl.ARRAY_BUFFER, this.__colorBuffer);
+        
+        {           
             let size = 4;
             let type = gl.FLOAT;
             let normalize = false;
             let stride = 0;
             let offset = 0;
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.__colorBuffer);
             gl.vertexAttribPointer(this.__colorLocation, size, type, normalize, stride, offset);
+            gl.enableVertexAttribArray(this.__colorLocation);
         }
+        
+        // Tell it to use our program (pair of shaders)
+        gl.useProgram(this.__program);
+
+        gl.uniformMatrix4fv(this.__projectionMatrix, false, camera.projection);
+        gl.uniformMatrix4fv(this.__modelViewMatrix, false, this.owner.matrix);
+
         let primitiveType = gl.TRIANGLES;
         let count = 3;
         let offset = 0;
         gl.drawArrays(primitiveType, offset, count);
+    }
+
+    get tag (){
+        return TriangleRenderComponent.tag;
     }
 
     static get tag () {

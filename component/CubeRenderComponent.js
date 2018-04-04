@@ -5,6 +5,10 @@ import { mat4, vec3 } from "../libs/gl-matrix/gl-matrix";
 import { TranslateComponent } from "./TranslateComponent";
 import { RotateComponent } from "./RotateComponent";
 import { ScaleComponent } from "./ScaleComponent";
+import { Color } from "../geometric/Color";
+import { GameObject } from "../gameObject/GameObject";
+import { CubeGameObject } from "../gameObject/CubeGameObject";
+import { Point3D } from "../geometric/Point3D";
 
   // position of each face of the cube
   const vertices = [
@@ -55,16 +59,19 @@ import { ScaleComponent } from "./ScaleComponent";
   ];
 
 export class CubeRenderComponent extends RenderComponent{
-    
-    constructor({owner, gl, positions, color}) {
-        super(owner, gl);
-        Object.assign(this, {__positions : positions, __color : color});
+    /**
+     * Creates an instance of CubeRenderComponent.
+     * @memberof CubeRenderComponent
+     */
+    constructor({owner}) {
+        super({owner : owner});
         this.__positionAttributeLocation = undefined;
         this.__positionBuffer =  undefined;
         this.__colorLocation = undefined;
         this.__colorBuffer = undefined;
         this.__indexBuffer = undefined;
-        this.__modelViewMatrix = undefined;
+        this.__numberOfFace = 6;
+        this.__numberOfVertexPerFace = 4;
     }
 
     vertexShaderSource() {
@@ -77,7 +84,7 @@ export class CubeRenderComponent extends RenderComponent{
         varying lowp vec4 vColor;
   
         void main() {
-          gl_Position = uModelViewMatrix * aVertexPosition;
+          gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
           vColor = aVertexColor;
         }`;
     };
@@ -90,40 +97,13 @@ export class CubeRenderComponent extends RenderComponent{
         }`;
     };
 
-    get color(){
-        return this.__color;
-    }
-
-    set color(color){
-        this.__color = color;
-    }
-
-    apllyTransform(){
-        // caculate matrix
-        let c;
-        if (c = this.__owner.listComponents[TranslateComponent.tag]) {
-            c.translate(this.owner.matrix);    
-        }
-
-        if (c = this.__owner.listComponents[RotateComponent.tag]) {
-            c.rotateAll(this.owner.matrix);
-        }
-
-        if (c = this.__owner.listComponents[ScaleComponent.tag]) {
-            //c.scale(this.owner.matrix);
-        }
-
-        console.log("Transform");
-    }
-
     onLoad(){
         super.onLoad();
-        //this.apllyTransform();
 
         let game = new Game();
         let gl = game.canvas;
 
-        this.__program = JSUtils.createProgram(gl, this.vertexShader, this.fragmentShader);
+        this.__program = JSUtils.createProgram(this.vertexShader, this.fragmentShader);
         this.__positionAttributeLocation = gl.getAttribLocation(this.__program, "aVertexPosition");
         this.__positionBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, this.__positionBuffer);
@@ -133,24 +113,14 @@ export class CubeRenderComponent extends RenderComponent{
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
 
-        let colors = []
+        this.__modelViewMatrix = gl.getUniformLocation(this.__program, 'uModelViewMatrix');
 
-        for (let index = 0; index < 6; index++) {
-            const c = [this.color.r, this.color.g, this.color.b, 1];
-            colors = colors.concat(c, c, c, c);
-            
-        }
-
-        this.__colorLocation = gl.getAttribLocation(this.__program, "aVertexColor");
-        this.__colorBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.__colorBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-
-        this.__modelViewMatrix = gl.getUniformLocation(this.__program, 'uModelViewMatrix')
+        this.__projectionMatrix = gl.getUniformLocation(this.__program, 'uProjectionMatrix');
     }
 
     onRender(context, projctionMareix){
         super.onRender(context, projctionMareix);
+        let camera = new Game().camera;
 
         {
             let size = 3;
@@ -179,7 +149,8 @@ export class CubeRenderComponent extends RenderComponent{
         }
 
         context.useProgram(this.__program);
-
+        
+        context.uniformMatrix4fv(this.__projectionMatrix, false, camera.projection);
         context.uniformMatrix4fv(this.__modelViewMatrix, false, this.owner.matrix);
 
         {

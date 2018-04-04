@@ -1,11 +1,15 @@
 import { Component } from "./Component";
 import { vec3, mat4 } from "../libs/gl-matrix/gl-matrix";
+import { GameObject } from "../gameObject/GameObject";
 
  
  export class RotateComponent extends Component{
-
-     constructor({owner}) {
-        super(owner);
+    /**
+     * Creates an instance of RotateComponent.
+     * @memberof RotateComponent
+     */
+    constructor({owner}) {
+        super({owner : owner});
         this.__rotation = vec3.create();         
      }
 
@@ -27,7 +31,7 @@ import { vec3, mat4 } from "../libs/gl-matrix/gl-matrix";
      }
 
      set y(y) {
-         this.__rotation[1] = y;
+         this.__rotation[1] = y;         
          mat4.rotateY(this.owner.matrix, this.owner.matrix, y);
      }
 
