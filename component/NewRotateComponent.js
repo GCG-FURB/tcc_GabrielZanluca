@@ -40,15 +40,15 @@ import { GameObject } from "../gameObject/GameObject";
         this.owner.matrix[2] = Math.sin(this.__rotation[0]);
         this.owner.matrix[10] = Math.cos(this.__rotation[0]);
 
-        // let matRotY = mat4.create();
+        let matRotY = mat4.create();
 
 
-        // matRotY[0] = Math.cos(this.__rotation[1]);
-        // matRotY[8] = -Math.sin(this.__rotation[1]);
-        // matRotY[2] = Math.sin(this.__rotation[1]);
-        // matRotY[10] = Math.cos(this.__rotation[1]);
+        matRotY[0] = Math.cos(this.__rotation[1]);
+        matRotY[8] = -Math.sin(this.__rotation[1]);
+        matRotY[2] = Math.sin(this.__rotation[1]);
+        matRotY[10] = Math.cos(this.__rotation[1]);
 
-        // mat4.multiply(this.owner.matrix, this.owner.matrix, matRotY);
+        mat4.multiply(this.owner.matrix, this.owner.matrix, matRotY);
      }
 
      set z(z) {

@@ -51,7 +51,6 @@ export class RenderComponent extends Component {
      * @memberof CubeRenderComponent
      */
     set color(color){
-
         let game = new Game();
         let gl = game.canvas;
 

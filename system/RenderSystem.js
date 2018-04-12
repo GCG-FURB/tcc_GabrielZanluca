@@ -11,10 +11,11 @@ export class RenderSystem {
         //game.canvas.clearColor(game.canvas.COLOR_BUFFER_BIT);
         //game.canvas.clear(game.canvas.COLOR_BUFFER_BIT); 
         game.canvas.clearColor(1.0, 1.0, 1.0, 1.0);
+        game.canvas.enable(game.canvas.CULL_FACE);    
         game.canvas.clear( game.canvas.COLOR_BUFFER_BIT |  game.canvas.DEPTH_BUFFER_BIT);
         game.canvas.clearDepth(1.0);                 // Clear everything
         game.canvas.enable(game.canvas.DEPTH_TEST);           // Enable depth testing
-        game.canvas.depthFunc(game.canvas.LEQUAL);            // Near things obscure far things       
+        game.canvas.depthFunc(game.canvas.LEQUAL);            // Near things obscure far things  
 
         if (game.scene) {
             for (let gameObject of game.scene.gameObjectList) {

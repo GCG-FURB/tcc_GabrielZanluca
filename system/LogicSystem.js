@@ -19,4 +19,8 @@ export class LogicSystem {
             }  
         }
     }
+
+    static get tag () {
+        return "LOGIC_SYSTEM";
+    }
 }

@@ -8,13 +8,14 @@ import { mat4 } from "../libs/gl-matrix/gl-matrix";
 import { NewRotateComponent } from "../component/NewRotateComponent";
 import { NewScaleComponent } from "../component/NewScaleComponent";
 import { NewTranslateComponent } from "../component/NewTranslateComponent";
+import { Point3D } from "../geometric/Point3D";
 
 export class CubeGameObject extends GameObject{
-    constructor({point, color}) {
+    constructor({point =  new Point3D(0,0,0), color}) {
         super({oringin : point, color});
         this.__listComponents.addComponent(new CubeRenderComponent({owner : this}));
         this.render.onLoad();
-        this.listComponents[CubeRenderComponent.tag].color = color;
+        this.render.color = color;
     }
 
     get render() {

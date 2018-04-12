@@ -59,18 +59,12 @@ import { Point3D } from "../geometric/Point3D";
   ];
 
 export class CubeRenderComponent extends RenderComponent{
-    /**
-     * Creates an instance of CubeRenderComponent.
-     * @memberof CubeRenderComponent
-     */
+    
     constructor({owner}) {
         super({owner : owner});
-        this.__positionAttributeLocation = undefined;
-        this.__positionBuffer =  undefined;
-        this.__colorLocation = undefined;
-        this.__colorBuffer = undefined;
         this.__indexBuffer = undefined;
         this.__numberOfFace = 6;
+        this.__cameraMatrix = undefined;
         this.__numberOfVertexPerFace = 4;
     }
 
@@ -80,15 +74,16 @@ export class CubeRenderComponent extends RenderComponent{
   
         uniform mat4 uModelViewMatrix;
         uniform mat4 uProjectionMatrix;
+        uniform mat4 uCameraMatrix;
   
         varying lowp vec4 vColor;
   
         void main() {
-          gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
+          gl_Position = uProjectionMatrix * uCameraMatrix * uModelViewMatrix * aVertexPosition;
           vColor = aVertexColor;
         }`;
     };
-
+//u_projection * u_camera * u_transform * 
     fragmentShaderSource(){
         return `varying lowp vec4 vColor;
 
@@ -116,6 +111,8 @@ export class CubeRenderComponent extends RenderComponent{
         this.__modelViewMatrix = gl.getUniformLocation(this.__program, 'uModelViewMatrix');
 
         this.__projectionMatrix = gl.getUniformLocation(this.__program, 'uProjectionMatrix');
+
+        this.__cameraMatrix = gl.getUniformLocation(this.__program, 'uCameraMatrix')
     }
 
     onRender(context, projctionMareix){
@@ -149,9 +146,15 @@ export class CubeRenderComponent extends RenderComponent{
         }
 
         context.useProgram(this.__program);
+
+        // let matTemp = mat4.create();
+
+        // mat4.invert(matTemp, camera.projection);
+        // mat4.multiply(matTemp, matTemp, this.owner.matrix)
         
         context.uniformMatrix4fv(this.__projectionMatrix, false, camera.projection);
         context.uniformMatrix4fv(this.__modelViewMatrix, false, this.owner.matrix);
+        context.uniformMatrix4fv(this.__cameraMatrix, false, camera.matrix);
 
         {
             const offset = 0;

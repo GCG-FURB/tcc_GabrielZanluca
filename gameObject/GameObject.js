@@ -13,7 +13,10 @@ import { ScaleComponent } from "../component/ScaleComponent";
 import { RenderComponent } from "../component/RenderComponent";
 
 export class GameObject {
-
+    /**
+     * Creates an instance of GameObject.
+     * @memberof GameObject
+     */
     constructor({ oringin = new Point3D(0, 0, 0), color = new Color(), }) {
         this.__id = JSUtils.generateUUID();
         this.__matrix = mat4.create();
@@ -21,9 +24,13 @@ export class GameObject {
         this.__color = color;
         this.__listComponents = new ComponentList();
         this.__children = new Array();
-        this.__listComponents.addComponent(new NewTranslateComponent({ owner: this }));
+        this.__listComponents.addComponent(new TranslateComponent({ owner: this }));
         this.__listComponents.addComponent(new RotateComponent({ owner: this }));
-        this.__listComponents.addComponent(new NewScaleComponent({ owner: this }));
+        this.__listComponents.addComponent(new ScaleComponent({ owner: this }));
+        this.__positionAttributeLocation = undefined;
+        this.__positionBuffer =  undefined;
+        this.__colorLocation = undefined;
+        this.__colorBuffer = undefined;
         this.translate.translation = [oringin.x, oringin.y, oringin.z];
     }
 
@@ -48,7 +55,7 @@ export class GameObject {
     }
 
     get translate() {
-        return this.listComponents[NewTranslateComponent.tag];
+        return this.listComponents[TranslateComponent.tag];
     }
 
     get rotate() {
@@ -56,7 +63,7 @@ export class GameObject {
     }
 
     get scale() {
-        return this.listComponents[NewScaleComponent.tag];
+        return this.listComponents[ScaleComponent.tag];
     }
 
     get color() {
@@ -67,7 +74,13 @@ export class GameObject {
         this.__color = color;
         this.render.color = color;
     }
-
+    /**
+     * 
+     * 
+     * @readonly
+     * @memberof GameObject
+     * @returns {RenderComponent}
+     */
     get render() {
         return undefined;
     }
