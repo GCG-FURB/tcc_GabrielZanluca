@@ -3,7 +3,8 @@ var path = require('path');
 
  module.exports = {
      entry: {
-        app: './app/main.js'
+        cube: './app/main2.js',
+        triangle: './app/main.js'
      },
      output: {
         path: path.resolve(__dirname, 'build'),

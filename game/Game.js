@@ -1,20 +1,24 @@
 import {Scene} from "./Scene";
 import { ComponentList } from "../utils/ComponentList";
 import { RenderSystem } from "../system/RenderSystem";
+import { mat4 } from "../libs/gl-matrix/gl-matrix";
+import { LogicSystem } from "../system/LogicSystem";
 
 let instace = undefined;
 
 export class Game {
-    constructor(canvas, scene) {
+    constructor(canvas, scene, camera) {
         if (!instace) {
             this.__canvas = canvas;
             this.__scene = scene;
             this.__listComponents = new ComponentList();
             this.__requestAnimFrame = undefined;
             this.__lastUpdateTime = 0;
+            this.__projection = mat4.create();
+            this.__camera = camera;
             instace = this;
-            //this.loadGame();
             this.startGameLoop();
+            //this.loadGame();
         }
 
         return instace;
@@ -28,12 +32,20 @@ export class Game {
         return this.__scene;
     }
 
+    get projection(){
+        return this.__projection;
+    }
+
+    get camera() {
+        return this.__camera;
+    }
+
     startGameLoop() {
         let Loop = () => {
+            this.__requestAnimFrame = window.requestAnimationFrame (Loop);
             this.gameLoop();
         };
-
-        this.____requestAnimFrame = window.requestAnimationFrame (Loop);
+        
         Loop();
     }
 
@@ -54,9 +66,7 @@ export class Game {
     }
 
     updateGame(deltaTime) {
-        /**
-         * LogicSystem
-         */
+        LogicSystem.fireUpdateListener(deltaTime);
     }
 
     renderGame(){

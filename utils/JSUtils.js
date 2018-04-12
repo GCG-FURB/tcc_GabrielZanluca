@@ -1,3 +1,5 @@
+import { Game } from "../game/Game";
+
 /**
  * 
  * 
@@ -25,12 +27,13 @@ export class JSUtils {
      * 
      * 
      * @static
-     * @param {Object} gl 
      * @param {Number} type 
      * @param {String} source 
      * @memberof JSUtils
      */
-    static createShader(gl, type, source) {
+    static createShader(type, source) {
+        let game = new Game();
+        let gl = game.canvas; 
         let shader = gl.createShader(type);
         gl.shaderSource(shader, source);
         gl.compileShader(shader);
@@ -43,7 +46,9 @@ export class JSUtils {
         gl.deleteShader(shader);
     }
 
-    static createProgram(gl, vertexShader, fragmentShader) {
+    static createProgram(vertexShader, fragmentShader) {
+        let game = new Game();
+        let gl = game.canvas;
         let program = gl.createProgram();
         gl.attachShader(program, vertexShader);
         gl.attachShader(program, fragmentShader);
@@ -56,4 +61,15 @@ export class JSUtils {
         console.log(gl.getProgramInfoLog(program));
         gl.deleteProgram(program);
     }
+
+    static printMatrix(matrix) {
+
+        console.log(matrix[0] + " " + matrix[4] + " " + matrix[8] + " " + matrix[12] + " ");
+        console.log(matrix[1] + " " + matrix[5] + " " + matrix[9] + " " + matrix[13] + " ");
+        console.log(matrix[2] + " " + matrix[6] + " " + matrix[10] + " " + matrix[14] + " ");
+        console.log(matrix[3] + " " + matrix[7] + " " + matrix[11] + " " + matrix[15] + " ");
+        
+    
+         // console.log(matrix);
+      }
 }
