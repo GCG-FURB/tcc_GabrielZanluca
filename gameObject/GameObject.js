@@ -27,7 +27,6 @@ export class GameObject {
         this.__listComponents.addComponent(new TranslateComponent({ owner: this }));
         this.__listComponents.addComponent(new RotateComponent({ owner: this }));
         this.__listComponents.addComponent(new ScaleComponent({ owner: this }));
-        this.__positionAttributeLocation = undefined;
         this.__positionBuffer =  undefined;
         this.__colorLocation = undefined;
         this.__colorBuffer = undefined;

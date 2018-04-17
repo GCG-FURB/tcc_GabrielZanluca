@@ -12,7 +12,7 @@ export class PerspectiveCamera{
         this.__projection = mat4.create();
         this.__matrix = mat4.create();
         mat4.perspective(this.__projection, fovy, aspect, near, far);
-        mat4.lookAt(this.__matrix, [position.x, 0, 5], [0,0,0], [0,1,0]);
+        //mat4.lookAt(this.__matrix, [6, 0, 15], [0,0,0], [0,1,0]);
     }
 
     get projection() {
