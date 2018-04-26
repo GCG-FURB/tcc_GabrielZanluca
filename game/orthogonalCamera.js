@@ -1,4 +1,5 @@
 import { mat4 } from "../libs/gl-matrix/gl-matrix";
+import { Point3D } from "../geometric/Point3D";
 
 export class OrthogonalCamera {
     constructor({left, right, bottom, top, near, far}) {
@@ -9,6 +10,10 @@ export class OrthogonalCamera {
 
     get projection() {
         return this.__projection;
+    }
+
+    get posisition() {
+        return new Point3D(0,0,0);
     }
 
     get matrix(){

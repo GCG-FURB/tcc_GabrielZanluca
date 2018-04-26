@@ -11,7 +11,8 @@ export class RenderComponent extends Component {
      */
     constructor({owner}) {
         super({owner : owner});      
-        this.__positionAttributeLocation = undefined;
+        this.__positionAttributeLocation = undefined;        
+        this.__vertexNomralAttribute = undefined;
         this.__positionBuffer = undefined;
         this.__modelViewMatrix = undefined;
         this.__projectionMatrix = undefined;               
@@ -23,6 +24,7 @@ export class RenderComponent extends Component {
         this.__cameraMatrix = undefined;
         this.__normalBuffer = undefined;
         this.__lightCode = "";
+        this.__cameraPosAttributeLocation = undefined;
         //this.initialize();
     }
 
@@ -32,45 +34,71 @@ export class RenderComponent extends Component {
 
     onLoad(){        
         let game = new Game();
-        let gl = game.canvas;
-        console.log(game.scene.ligthsInfo);
+        let gl = game.context;
         let ligths = "";
         if (game.scene.lights.length > 0){
             ligths += "#define LIGHT_COUNT " + game.scene.lights.length + "\n ";
             ligths += "uniform int uLightType[LIGHT_COUNT]; ";
             ligths += "uniform vec3 uLightPosition[LIGHT_COUNT]; ";
             ligths += "uniform vec3 uLightColor[LIGHT_COUNT]; ";
+            ligths += "uniform vec3 uLightColor2[LIGHT_COUNT]; ";
             ligths += "uniform vec3 uLightDirection[LIGHT_COUNT]; ";
+            ligths += "uniform float uShininess[LIGHT_COUNT]; ";
+            ligths += "uniform float uInnerLimit[LIGHT_COUNT]; ";
+            ligths += "uniform float uOuterLimit[LIGHT_COUNT]; ";
             
             this.__lightCode = " ";
-            this.__lightCode += "for(int i = 0; i < LIGHT_COUNT; i++) { ";
-            this.__lightCode += "if (uLightType[i] == 0) { ";
             this.__lightCode += "reflectedLightColor = vec3(0.0,0,0); ";
-            this.__lightCode += "highp vec3 directionalLightColor = uLightColor[i]; "
-            this.__lightCode += "highp vec3 directionalVector = normalize(uLightDirection[i]); ";
-            this.__lightCode += " highp vec4 transformedNormal = uNormalMatrix * vec4(aVertexNormal, 1.0); ";
-            //this.__lightCode += "highp vec4 transformedNormal = uNormalMatrix * vec4(aVertexNormal, 1.0);";
-            this.__lightCode += " highp float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0); "
-            this.__lightCode += "reflectedLightColor += (directionalLightColor * directional); ";
-
-
-
-            // 
-            // 
-            // 
-            // this.__lightCode += "reflectedLightColor += (directionalLightColor * directional);";
-            //this.__lightCode += "vec3 lightDirection = normalize(uLightPosition[i]);"
-            //this.__lightCode += "reflectedLightColor += max(dot(aVertexNormal, normalize(uLightDirection[i])), 0.0) * uLightColor[i];";
+            this.__lightCode += "for(int i = 0; i < LIGHT_COUNT; i++) { ";
+            this.__lightCode += " if (uLightType[i] == 0) { ";
+            this.__lightCode += "  highp vec3 directionalLightColor = uLightColor[i]; "
+            this.__lightCode += "  highp vec3 directionalVector = normalize(uLightPosition[i]); ";
+            this.__lightCode += "  highp vec4 transformedNormal = uNormalMatrix * vec4(aVertexNormal, 1.0); ";
+            this.__lightCode += "  highp float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0); "
+            this.__lightCode += "  reflectedLightColor += (directionalLightColor * directional); ";
+            this.__lightCode += " } else ";
+            this.__lightCode += " if (uLightType[i] == 1) {";
+            this.__lightCode += "  highp vec3 directionalLightColor = uLightColor[i]; "
+            this.__lightCode += "  highp vec3 surfaceWorldPosition = (uModelViewMatrix * aVertexPosition).xyz; "
+            this.__lightCode += "  highp vec3 v_surfaceToLight = uLightPosition[i] - surfaceWorldPosition; "
+            this.__lightCode += "  highp vec4 transformedNormal = uNormalMatrix * vec4(aVertexNormal, 0.0); ";
+            // this.__lightCode += "  highp vec3 u_viewWorldPosition = vec3(-0.21, 5.54, 7.09); "
+            this.__lightCode += "  highp vec3 surfaceToLightDirection = normalize(v_surfaceToLight); ";
+            this.__lightCode += "  highp vec3 v_surfaceToView = u_viewWorldPosition - surfaceWorldPosition; ";
+            this.__lightCode += "  highp vec3 surfaceToViewDirection = normalize(v_surfaceToView); ";
+            this.__lightCode += "  highp vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection); ";
+            this.__lightCode += "  float specular = 0.0; ";
+            this.__lightCode += "  highp float light = max(dot(transformedNormal.xyz, surfaceToLightDirection), 0.0); "
+            this.__lightCode += "  if (light > 0.0) { ";
+            this.__lightCode += "    specular = pow(dot(transformedNormal.xyz, halfVector), uShininess[i]);"
+            this.__lightCode += "  } ";
+            this.__lightCode += "  vColor.rgb += specular * uLightColor2[i]; ";
+            this.__lightCode += "  reflectedLightColor += light * directionalLightColor; ";
+            this.__lightCode += " } else ";
+            this.__lightCode += " if (uLightType[i] == 2) { ";
+            this.__lightCode += "  highp vec3 directionalLightColor = uLightColor[i]; "
+            this.__lightCode += "  highp vec3 surfaceWorldPosition = (uModelViewMatrix * aVertexPosition).xyz; "
+            this.__lightCode += "  highp vec3 v_surfaceToLight = uLightPosition[i] - surfaceWorldPosition; "
+            this.__lightCode += "  highp vec4 transformedNormal = uNormalMatrix * vec4(aVertexNormal, 0.0); ";
+            this.__lightCode += "  highp vec3 surfaceToLightDirection = normalize(v_surfaceToLight); ";
+            this.__lightCode += "  highp vec3 v_surfaceToView = u_viewWorldPosition - surfaceWorldPosition; ";
+            this.__lightCode += "  highp vec3 surfaceToViewDirection = normalize(v_surfaceToView); ";
+            this.__lightCode += "  highp vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection); ";
+            this.__lightCode += "  float dotFromDirection = dot(surfaceToLightDirection, - uLightDirection[i]); ";
+            this.__lightCode += "  float limitRange = uInnerLimit[i] - uOuterLimit[i]; ";
+            this.__lightCode += "  float inLight = clamp((dotFromDirection - uOuterLimit[i]) / limitRange, 0.0, 1.0); ";
+            this.__lightCode += "  float specular = inLight * pow(dot(transformedNormal.xyz, halfVector), uShininess[i]); ";
+            this.__lightCode += "  highp float light = inLight * max(dot(transformedNormal.xyz, surfaceToLightDirection), 0.0); ";
+            // this.__lightCode += "  if (dotFromDirection >= uLimit[i]) { "
+            // this.__lightCode += "  light = max(dot(transformedNormal.xyz, surfaceToLightDirection), 0.0);  "
+            // this.__lightCode += "   if (light > 0.0) { ";
+            // this.__lightCode += "     specular = pow(dot(transformedNormal.xyz, halfVector), uShininess[i]);"
+            // this.__lightCode += "   } ";
+            // this.__lightCode += "  } ";
+            this.__lightCode += "  vColor.rgb += specular * uLightColor2[i]; ";
+            this.__lightCode += "  reflectedLightColor += light * directionalLightColor; ";
+            this.__lightCode += " }"
             this.__lightCode += " } ";
-            this.__lightCode += " } ";
-            //this.__lightCode += "vColor = vec4(vColor.rgb * reflectedLightColor, vColor.a); ";
-
-            // this.__lightCode = "reflectedLightColor = vec3(0.0,0,0);";
-            // this.__lightCode += "highp vec3 directionalLightColor = vec3(1, 1, 0);"
-            // this.__lightCode += "highp vec3 directionalVector = normalize(vec3(0.85, 0.8, 0.75));";
-            // this.__lightCode += "highp vec4 transformedNormal = uNormalMatrix * vec4(aVertexNormal, 1.0);";
-            // this.__lightCode += "highp float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);"
-            // this.__lightCode += "reflectedLightColor = (directionalLightColor * directional);";
         } else {
             ligths = "";
             this.__lightCode = "";
@@ -103,7 +131,7 @@ export class RenderComponent extends Component {
      */
     set color(color){
         let game = new Game();
-        let gl = game.canvas;
+        let gl = game.context;
 
         this.__vertexColors = [];
 
@@ -143,7 +171,7 @@ export class RenderComponent extends Component {
                                                             color.r, color.g, color.b, 1);
             
             let game = new Game();
-            let gl = game.canvas;
+            let gl = game.context;
             this.__colorLocation = gl.getAttribLocation(this.__program, "aVertexColor");
             this.__colorBuffer = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, this.__colorBuffer);
@@ -171,7 +199,7 @@ export class RenderComponent extends Component {
             this.__vertexColors.splice(vertex * 4, 4, color.r, color.g, color.b, 1);
 
             let game = new Game();
-            let gl = game.canvas;
+            let gl = game.context;
             this.__colorLocation = gl.getAttribLocation(this.__program, "aVertexColor");
             this.__colorBuffer = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, this.__colorBuffer);

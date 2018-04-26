@@ -57,7 +57,7 @@ export class GameObject {
         return this.listComponents[TranslateComponent.tag];
     }
 
-    get rotate() {
+    get rotation() {
         return this.listComponents[RotateComponent.tag];
     }
 

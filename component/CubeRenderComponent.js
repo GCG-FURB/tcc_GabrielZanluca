@@ -103,11 +103,15 @@ export class CubeRenderComponent extends RenderComponent{
         this.__indexBuffer = undefined;
         this.__numberOfFace = 6;
         this.__numberOfVertexPerFace = 4
-        this.__vertexNomralAttribute = undefined;
         this.__normalMatrix = undefined;
-        this.__lightDirection = undefined;
+        this.__lightPosition = undefined;
         this.__lightColor = undefined;
+        this.__lightColor2 = undefined;
         this.__lightType = undefined;
+        this.__shininess = undefined;
+        this.__lightDirection = undefined;
+        this.__innerLimit = undefined;
+        this.__outerLimit = undefined;
     }
 
     vertexShaderSource() {
@@ -120,13 +124,14 @@ export class CubeRenderComponent extends RenderComponent{
         uniform mat4 uProjectionMatrix;
         uniform mat4 uCameraMatrix;
         uniform mat4 uNormalMatrix;
+        uniform vec3 u_viewWorldPosition;
   
         varying lowp vec4 vColor;
         varying highp vec3 reflectedLightColor;
   
         void main() {
           gl_Position = uProjectionMatrix * uCameraMatrix * uModelViewMatrix * aVertexPosition;
-          reflectedLightColor = vec3(0.0,0.0,0.0);
+          reflectedLightColor = vec3(1.0,1.0,1.0);
           vColor = aVertexColor;`
           + this.__lightCode +
          `}`;
@@ -148,19 +153,22 @@ export class CubeRenderComponent extends RenderComponent{
         super.onLoad();
 
         let game = new Game();
-        let gl = game.canvas;
+        let gl = game.context;
 
         if (this.__program){
             gl.deleteProgram(this.__program);
         }
         
-        //console.log(gl.getShaderSource(this.vertexShader));
-
+        // console.log(gl.getShaderSource(this.vertexShader));
+        
         this.__program = JSUtils.createProgram(this.vertexShader, this.fragmentShader);
+        // console.log(gl.getAttribLocation(this.__program, "aVertexNormal"));
         this.__positionAttributeLocation = gl.getAttribLocation(this.__program, "aVertexPosition");
         this.__positionBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, this.__positionBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+        this.__vertexNomralAttribute = 2;
 
         this.__indexBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer);
@@ -172,7 +180,6 @@ export class CubeRenderComponent extends RenderComponent{
 
         this.__cameraMatrix = gl.getUniformLocation(this.__program, 'uCameraMatrix');
 
-        this.__vertexNomralAttribute = gl.getAttribLocation(this.__program, 'aVertexNormal');
 
         this.__normalBuffer =  gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, this.__normalBuffer);
@@ -180,10 +187,17 @@ export class CubeRenderComponent extends RenderComponent{
 
         this.__normalMatrix = gl.getUniformLocation(this.__program, 'uNormalMatrix');
 
+        this.__cameraPosAttributeLocation = gl.getUniformLocation(this.__program, 'u_viewWorldPosition');;
+
         if (game.scene.lights.length > 0){
             this.__lightColor = gl.getUniformLocation(this.__program, 'uLightColor');
-            this.__lightDirection = gl.getUniformLocation(this.__program, 'uLightDirection');
+            this.__lightColor2 = gl.getUniformLocation(this.__program, 'uLightColor2');
+            this.__lightPosition = gl.getUniformLocation(this.__program, 'uLightPosition');
             this.__lightType = gl.getUniformLocation(this.__program, 'uLightType');
+            this.__shininess = gl.getUniformLocation(this.__program, 'uShininess');
+            this.__lightDirection = gl.getUniformLocation(this.__program, 'uLightDirection');
+            this.__innerLimit = gl.getUniformLocation(this.__program, 'uInnerLimit');
+            this.__outerLimit = gl.getUniformLocation(this.__program, 'uOuterLimit');
             //console.log(gl.getShaderSource(this.vertexShader));
         }
         
@@ -220,6 +234,10 @@ export class CubeRenderComponent extends RenderComponent{
         }
 
         context.useProgram(this.__program);
+
+        let matTemp = mat4.create();
+        mat4.multiply(matTemp, camera.projection, camera.matrix);
+        //console.log(matTemp);
         
         context.uniformMatrix4fv(this.__projectionMatrix, false, camera.projection);
         context.uniformMatrix4fv(this.__modelViewMatrix, false, this.owner.matrix);
@@ -229,6 +247,7 @@ export class CubeRenderComponent extends RenderComponent{
         mat4.invert(normalMatrix, this.owner.matrix);
         mat4.transpose(normalMatrix, normalMatrix);
         context.uniformMatrix4fv(this.__normalMatrix, false, normalMatrix);
+        context.uniform3fv(this.__cameraPosAttributeLocation, camera.posisition.toVector());
         {
             let numComponents = 3;
             let type = context.FLOAT;
@@ -252,9 +271,14 @@ export class CubeRenderComponent extends RenderComponent{
 
         if (scene.lights.length > 0) {
             let inf = scene.ligthsInfo;
-            context.uniform3fv(this.__lightDirection, inf.positions);
+            context.uniform3fv(this.__lightPosition, inf.positions);
+            context.uniform3fv(this.__lightDirection, inf.lookAt);
             context.uniform3fv(this.__lightColor, inf.colors);
+            context.uniform3fv(this.__lightColor2, inf.secondColor);
+            context.uniform1fv(this.__innerLimit, inf.lowLimmit);
+            context.uniform1fv(this.__outerLimit, inf.highLimmit);
             context.uniform1iv(this.__lightType, inf.types);
+            context.uniform1fv(this.__shininess, inf.shininess);
         }
 
         {

@@ -14,4 +14,8 @@ export class Point3D extends Point2D{
     set z(z) {
         this.__z = z;
     }
+
+    toVector(){
+        return [this.x, this.y, this.z];
+    }
 }

@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 36);
+/******/ 	return __webpack_require__(__webpack_require__.s = 41);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -75,39 +75,39 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.vec4 = exports.vec3 = exports.vec2 = exports.quat = exports.mat4 = exports.mat3 = exports.mat2d = exports.mat2 = exports.glMatrix = undefined;
 
-var _common = __webpack_require__(4);
+var _common = __webpack_require__(3);
 
 var glMatrix = _interopRequireWildcard(_common);
 
-var _mat = __webpack_require__(24);
+var _mat = __webpack_require__(23);
 
 var mat2 = _interopRequireWildcard(_mat);
 
-var _mat2d = __webpack_require__(25);
+var _mat2d = __webpack_require__(24);
 
 var mat2d = _interopRequireWildcard(_mat2d);
 
-var _mat2 = __webpack_require__(17);
+var _mat2 = __webpack_require__(15);
 
 var mat3 = _interopRequireWildcard(_mat2);
 
-var _mat3 = __webpack_require__(26);
+var _mat3 = __webpack_require__(25);
 
 var mat4 = _interopRequireWildcard(_mat3);
 
-var _quat = __webpack_require__(27);
+var _quat = __webpack_require__(26);
 
 var quat = _interopRequireWildcard(_quat);
 
-var _vec = __webpack_require__(28);
+var _vec = __webpack_require__(27);
 
 var vec2 = _interopRequireWildcard(_vec);
 
-var _vec2 = __webpack_require__(18);
+var _vec2 = __webpack_require__(16);
 
 var vec3 = _interopRequireWildcard(_vec2);
 
-var _vec3 = __webpack_require__(19);
+var _vec3 = __webpack_require__(17);
 
 var vec4 = _interopRequireWildcard(_vec3);
 
@@ -163,7 +163,7 @@ exports.Component = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _JSUtils = __webpack_require__(6);
+var _JSUtils = __webpack_require__(7);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -279,17 +279,17 @@ exports.GameObject = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _JSUtils = __webpack_require__(6);
+var _JSUtils = __webpack_require__(7);
 
 var _Point2D = __webpack_require__(11);
 
-var _ComponentList = __webpack_require__(16);
+var _ComponentList = __webpack_require__(20);
 
 var _Component = __webpack_require__(1);
 
 var _Point3D = __webpack_require__(5);
 
-var _Color = __webpack_require__(7);
+var _Color = __webpack_require__(6);
 
 var _NewTranslateComponent = __webpack_require__(12);
 
@@ -398,7 +398,7 @@ var GameObject = exports.GameObject = function () {
             return this.listComponents[_TranslateComponent.TranslateComponent.tag];
         }
     }, {
-        key: "rotate",
+        key: "rotation",
         get: function get() {
             return this.listComponents[_RotateComponent.RotateComponent.tag];
         }
@@ -436,119 +436,6 @@ var GameObject = exports.GameObject = function () {
 
 /***/ }),
 /* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.Game = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _Scene = __webpack_require__(15);
-
-var _ComponentList = __webpack_require__(16);
-
-var _RenderSystem = __webpack_require__(23);
-
-var _glMatrix = __webpack_require__(0);
-
-var _LogicSystem = __webpack_require__(29);
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var instace = undefined;
-
-var Game = exports.Game = function () {
-    function Game(canvas, scene, camera) {
-        _classCallCheck(this, Game);
-
-        if (!instace) {
-            this.__canvas = canvas;
-            this.__scene = scene;
-            this.__listComponents = new _ComponentList.ComponentList();
-            this.__requestAnimFrame = undefined;
-            this.__lastUpdateTime = 0;
-            this.__projection = _glMatrix.mat4.create();
-            this.__camera = camera;
-            instace = this;
-            this.startGameLoop();
-            //this.loadGame();
-        }
-
-        return instace;
-    }
-
-    _createClass(Game, [{
-        key: "startGameLoop",
-        value: function startGameLoop() {
-            var _this = this;
-
-            var Loop = function Loop() {
-                _this.__requestAnimFrame = window.requestAnimationFrame(Loop);
-                _this.gameLoop();
-            };
-
-            Loop();
-        }
-    }, {
-        key: "stopGame",
-        value: function stopGame() {
-            window.cancelAnimationFrame(this.__requestAnimFrame);
-            /**
-             * Trazer o resto de remover eventos.
-             */
-        }
-    }, {
-        key: "gameLoop",
-        value: function gameLoop() {
-            var deltaTime = (Date.now() - this.__lastUpdateTime) / 1000;
-            //if (this.__paused) {
-            this.updateGame(deltaTime);
-            this.renderGame();
-            //}
-            this.__lastUpdateTime = Date.now();
-        }
-    }, {
-        key: "updateGame",
-        value: function updateGame(deltaTime) {
-            _LogicSystem.LogicSystem.fireUpdateListener(deltaTime);
-        }
-    }, {
-        key: "renderGame",
-        value: function renderGame() {
-            _RenderSystem.RenderSystem.fireRenderListener();
-        }
-    }, {
-        key: "canvas",
-        get: function get() {
-            return this.__canvas;
-        }
-    }, {
-        key: "scene",
-        get: function get() {
-            return this.__scene;
-        }
-    }, {
-        key: "projection",
-        get: function get() {
-            return this.__projection;
-        }
-    }, {
-        key: "camera",
-        get: function get() {
-            return this.__camera;
-        }
-    }]);
-
-    return Game;
-}();
-
-/***/ }),
-/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -624,6 +511,119 @@ function equals(a, b) {
 }
 
 /***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.Game = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Scene = __webpack_require__(19);
+
+var _ComponentList = __webpack_require__(20);
+
+var _RenderSystem = __webpack_require__(28);
+
+var _glMatrix = __webpack_require__(0);
+
+var _LogicSystem = __webpack_require__(29);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var instace = undefined;
+
+var Game = exports.Game = function () {
+    function Game(context, scene, camera) {
+        _classCallCheck(this, Game);
+
+        if (!instace) {
+            this.__context = context;
+            this.__scene = scene;
+            this.__listComponents = new _ComponentList.ComponentList();
+            this.__requestAnimFrame = undefined;
+            this.__lastUpdateTime = 0;
+            this.__projection = _glMatrix.mat4.create();
+            this.__camera = camera;
+            instace = this;
+            this.startGameLoop();
+            //this.loadGame();
+        }
+
+        return instace;
+    }
+
+    _createClass(Game, [{
+        key: "startGameLoop",
+        value: function startGameLoop() {
+            var _this = this;
+
+            var Loop = function Loop() {
+                _this.__requestAnimFrame = window.requestAnimationFrame(Loop);
+                _this.gameLoop();
+            };
+
+            Loop();
+        }
+    }, {
+        key: "stopGame",
+        value: function stopGame() {
+            window.cancelAnimationFrame(this.__requestAnimFrame);
+            /**
+             * Trazer o resto de remover eventos.
+             */
+        }
+    }, {
+        key: "gameLoop",
+        value: function gameLoop() {
+            var deltaTime = (Date.now() - this.__lastUpdateTime) / 1000;
+            //if (this.__paused) {
+            this.updateGame(deltaTime);
+            this.renderGame();
+            //}
+            this.__lastUpdateTime = Date.now();
+        }
+    }, {
+        key: "updateGame",
+        value: function updateGame(deltaTime) {
+            _LogicSystem.LogicSystem.fireUpdateListener(deltaTime);
+        }
+    }, {
+        key: "renderGame",
+        value: function renderGame() {
+            _RenderSystem.RenderSystem.fireRenderListener();
+        }
+    }, {
+        key: "context",
+        get: function get() {
+            return this.__context;
+        }
+    }, {
+        key: "scene",
+        get: function get() {
+            return this.__scene;
+        }
+    }, {
+        key: "projection",
+        get: function get() {
+            return this.__projection;
+        }
+    }, {
+        key: "camera",
+        get: function get() {
+            return this.__camera;
+        }
+    }]);
+
+    return Game;
+}();
+
+/***/ }),
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -658,6 +658,11 @@ var Point3D = exports.Point3D = function (_Point2D) {
     }
 
     _createClass(Point3D, [{
+        key: "toVector",
+        value: function toVector() {
+            return [this.x, this.y, this.z];
+        }
+    }, {
         key: "z",
         get: function get() {
             return this.__z;
@@ -672,113 +677,6 @@ var Point3D = exports.Point3D = function (_Point2D) {
 
 /***/ }),
 /* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.JSUtils = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _Game = __webpack_require__(3);
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * 
- * 
- * @author Gabriel Zanluca
- * @export
- * @class JSUtils
- */
-var JSUtils = exports.JSUtils = function () {
-    function JSUtils() {
-        _classCallCheck(this, JSUtils);
-    }
-
-    _createClass(JSUtils, null, [{
-        key: 'generateUUID',
-
-        /**
-         * 
-         * 
-         * @static
-         * @returns {String}
-         * @memberof JSUtils
-         */
-        value: function generateUUID() {
-            var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-                var r = Math.random() * 16 | 0,
-                    v = c == 'x' ? r : r & 0x3 | 0x8;
-                return v.toString(16);
-            });
-            return uuid;
-        }
-
-        /**
-         * 
-         * 
-         * @static
-         * @param {Number} type 
-         * @param {String} source 
-         * @memberof JSUtils
-         */
-
-    }, {
-        key: 'createShader',
-        value: function createShader(type, source) {
-            var game = new _Game.Game();
-            var gl = game.canvas;
-            var shader = gl.createShader(type);
-            gl.shaderSource(shader, source);
-            gl.compileShader(shader);
-            var success = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
-            if (success) {
-                return shader;
-            }
-
-            console.log(gl.getShaderInfoLog(shader));
-            gl.deleteShader(shader);
-        }
-    }, {
-        key: 'createProgram',
-        value: function createProgram(vertexShader, fragmentShader) {
-            var game = new _Game.Game();
-            var gl = game.canvas;
-            var program = gl.createProgram();
-            gl.attachShader(program, vertexShader);
-            gl.attachShader(program, fragmentShader);
-            gl.linkProgram(program);
-            var success = gl.getProgramParameter(program, gl.LINK_STATUS);
-            if (success) {
-                return program;
-            }
-
-            console.log(gl.getProgramInfoLog(program));
-            gl.deleteProgram(program);
-        }
-    }, {
-        key: 'printMatrix',
-        value: function printMatrix(matrix) {
-
-            console.log(matrix[0] + " " + matrix[4] + " " + matrix[8] + " " + matrix[12] + " ");
-            console.log(matrix[1] + " " + matrix[5] + " " + matrix[9] + " " + matrix[13] + " ");
-            console.log(matrix[2] + " " + matrix[6] + " " + matrix[10] + " " + matrix[14] + " ");
-            console.log(matrix[3] + " " + matrix[7] + " " + matrix[11] + " " + matrix[15] + " ");
-
-            // console.log(matrix);
-        }
-    }]);
-
-    return JSUtils;
-}();
-
-/***/ }),
-/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -904,6 +802,113 @@ var Color = exports.Color = function () {
     }]);
 
     return Color;
+}();
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.JSUtils = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Game = __webpack_require__(4);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * 
+ * 
+ * @author Gabriel Zanluca
+ * @export
+ * @class JSUtils
+ */
+var JSUtils = exports.JSUtils = function () {
+    function JSUtils() {
+        _classCallCheck(this, JSUtils);
+    }
+
+    _createClass(JSUtils, null, [{
+        key: 'generateUUID',
+
+        /**
+         * 
+         * 
+         * @static
+         * @returns {String}
+         * @memberof JSUtils
+         */
+        value: function generateUUID() {
+            var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                var r = Math.random() * 16 | 0,
+                    v = c == 'x' ? r : r & 0x3 | 0x8;
+                return v.toString(16);
+            });
+            return uuid;
+        }
+
+        /**
+         * 
+         * 
+         * @static
+         * @param {Number} type 
+         * @param {String} source 
+         * @memberof JSUtils
+         */
+
+    }, {
+        key: 'createShader',
+        value: function createShader(type, source) {
+            var game = new _Game.Game();
+            var gl = game.context;
+            var shader = gl.createShader(type);
+            gl.shaderSource(shader, source);
+            gl.compileShader(shader);
+            var success = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
+            if (success) {
+                return shader;
+            }
+
+            console.log(gl.getShaderInfoLog(shader));
+            gl.deleteShader(shader);
+        }
+    }, {
+        key: 'createProgram',
+        value: function createProgram(vertexShader, fragmentShader) {
+            var game = new _Game.Game();
+            var gl = game.context;
+            var program = gl.createProgram();
+            gl.attachShader(program, vertexShader);
+            gl.attachShader(program, fragmentShader);
+            gl.linkProgram(program);
+            var success = gl.getProgramParameter(program, gl.LINK_STATUS);
+            if (success) {
+                return program;
+            }
+
+            console.log(gl.getProgramInfoLog(program));
+            gl.deleteProgram(program);
+        }
+    }, {
+        key: 'printMatrix',
+        value: function printMatrix(matrix) {
+
+            console.log(matrix[0] + " " + matrix[4] + " " + matrix[8] + " " + matrix[12] + " ");
+            console.log(matrix[1] + " " + matrix[5] + " " + matrix[9] + " " + matrix[13] + " ");
+            console.log(matrix[2] + " " + matrix[6] + " " + matrix[10] + " " + matrix[14] + " ");
+            console.log(matrix[3] + " " + matrix[7] + " " + matrix[11] + " " + matrix[15] + " ");
+
+            // console.log(matrix);
+        }
+    }]);
+
+    return JSUtils;
 }();
 
 /***/ }),
@@ -1468,11 +1473,11 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _Component2 = __webpack_require__(1);
 
-var _JSUtils = __webpack_require__(6);
+var _JSUtils = __webpack_require__(7);
 
-var _Game = __webpack_require__(3);
+var _Game = __webpack_require__(4);
 
-var _Color = __webpack_require__(7);
+var _Color = __webpack_require__(6);
 
 var _GameObject = __webpack_require__(2);
 
@@ -1497,6 +1502,7 @@ var RenderComponent = exports.RenderComponent = function (_Component) {
         var _this = _possibleConstructorReturn(this, (RenderComponent.__proto__ || Object.getPrototypeOf(RenderComponent)).call(this, { owner: owner }));
 
         _this.__positionAttributeLocation = undefined;
+        _this.__vertexNomralAttribute = undefined;
         _this.__positionBuffer = undefined;
         _this.__modelViewMatrix = undefined;
         _this.__projectionMatrix = undefined;
@@ -1508,6 +1514,7 @@ var RenderComponent = exports.RenderComponent = function (_Component) {
         _this.__cameraMatrix = undefined;
         _this.__normalBuffer = undefined;
         _this.__lightCode = "";
+        _this.__cameraPosAttributeLocation = undefined;
         //this.initialize();
         return _this;
     }
@@ -1521,43 +1528,71 @@ var RenderComponent = exports.RenderComponent = function (_Component) {
         key: "onLoad",
         value: function onLoad() {
             var game = new _Game.Game();
-            var gl = game.canvas;
-            console.log(game.scene.ligthsInfo);
+            var gl = game.context;
             var ligths = "";
             if (game.scene.lights.length > 0) {
                 ligths += "#define LIGHT_COUNT " + game.scene.lights.length + "\n ";
                 ligths += "uniform int uLightType[LIGHT_COUNT]; ";
                 ligths += "uniform vec3 uLightPosition[LIGHT_COUNT]; ";
                 ligths += "uniform vec3 uLightColor[LIGHT_COUNT]; ";
+                ligths += "uniform vec3 uLightColor2[LIGHT_COUNT]; ";
                 ligths += "uniform vec3 uLightDirection[LIGHT_COUNT]; ";
+                ligths += "uniform float uShininess[LIGHT_COUNT]; ";
+                ligths += "uniform float uInnerLimit[LIGHT_COUNT]; ";
+                ligths += "uniform float uOuterLimit[LIGHT_COUNT]; ";
 
                 this.__lightCode = " ";
-                this.__lightCode += "for(int i = 0; i < LIGHT_COUNT; i++) { ";
-                this.__lightCode += "if (uLightType[i] == 0) { ";
                 this.__lightCode += "reflectedLightColor = vec3(0.0,0,0); ";
-                this.__lightCode += "highp vec3 directionalLightColor = uLightColor[i]; ";
-                this.__lightCode += "highp vec3 directionalVector = normalize(uLightDirection[i]); ";
-                this.__lightCode += " highp vec4 transformedNormal = uNormalMatrix * vec4(aVertexNormal, 1.0); ";
-                //this.__lightCode += "highp vec4 transformedNormal = uNormalMatrix * vec4(aVertexNormal, 1.0);";
-                this.__lightCode += " highp float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0); ";
-                this.__lightCode += "reflectedLightColor += (directionalLightColor * directional); ";
-
-                // 
-                // 
-                // 
-                // this.__lightCode += "reflectedLightColor += (directionalLightColor * directional);";
-                //this.__lightCode += "vec3 lightDirection = normalize(uLightPosition[i]);"
-                //this.__lightCode += "reflectedLightColor += max(dot(aVertexNormal, normalize(uLightDirection[i])), 0.0) * uLightColor[i];";
+                this.__lightCode += "for(int i = 0; i < LIGHT_COUNT; i++) { ";
+                this.__lightCode += " if (uLightType[i] == 0) { ";
+                this.__lightCode += "  highp vec3 directionalLightColor = uLightColor[i]; ";
+                this.__lightCode += "  highp vec3 directionalVector = normalize(uLightPosition[i]); ";
+                this.__lightCode += "  highp vec4 transformedNormal = uNormalMatrix * vec4(aVertexNormal, 1.0); ";
+                this.__lightCode += "  highp float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0); ";
+                this.__lightCode += "  reflectedLightColor += (directionalLightColor * directional); ";
+                this.__lightCode += " } else ";
+                this.__lightCode += " if (uLightType[i] == 1) {";
+                this.__lightCode += "  highp vec3 directionalLightColor = uLightColor[i]; ";
+                this.__lightCode += "  highp vec3 surfaceWorldPosition = (uModelViewMatrix * aVertexPosition).xyz; ";
+                this.__lightCode += "  highp vec3 v_surfaceToLight = uLightPosition[i] - surfaceWorldPosition; ";
+                this.__lightCode += "  highp vec4 transformedNormal = uNormalMatrix * vec4(aVertexNormal, 0.0); ";
+                // this.__lightCode += "  highp vec3 u_viewWorldPosition = vec3(-0.21, 5.54, 7.09); "
+                this.__lightCode += "  highp vec3 surfaceToLightDirection = normalize(v_surfaceToLight); ";
+                this.__lightCode += "  highp vec3 v_surfaceToView = u_viewWorldPosition - surfaceWorldPosition; ";
+                this.__lightCode += "  highp vec3 surfaceToViewDirection = normalize(v_surfaceToView); ";
+                this.__lightCode += "  highp vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection); ";
+                this.__lightCode += "  float specular = 0.0; ";
+                this.__lightCode += "  highp float light = max(dot(transformedNormal.xyz, surfaceToLightDirection), 0.0); ";
+                this.__lightCode += "  if (light > 0.0) { ";
+                this.__lightCode += "    specular = pow(dot(transformedNormal.xyz, halfVector), uShininess[i]);";
+                this.__lightCode += "  } ";
+                this.__lightCode += "  vColor.rgb += specular * uLightColor2[i]; ";
+                this.__lightCode += "  reflectedLightColor += light * directionalLightColor; ";
+                this.__lightCode += " } else ";
+                this.__lightCode += " if (uLightType[i] == 2) { ";
+                this.__lightCode += "  highp vec3 directionalLightColor = uLightColor[i]; ";
+                this.__lightCode += "  highp vec3 surfaceWorldPosition = (uModelViewMatrix * aVertexPosition).xyz; ";
+                this.__lightCode += "  highp vec3 v_surfaceToLight = uLightPosition[i] - surfaceWorldPosition; ";
+                this.__lightCode += "  highp vec4 transformedNormal = uNormalMatrix * vec4(aVertexNormal, 0.0); ";
+                this.__lightCode += "  highp vec3 surfaceToLightDirection = normalize(v_surfaceToLight); ";
+                this.__lightCode += "  highp vec3 v_surfaceToView = u_viewWorldPosition - surfaceWorldPosition; ";
+                this.__lightCode += "  highp vec3 surfaceToViewDirection = normalize(v_surfaceToView); ";
+                this.__lightCode += "  highp vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection); ";
+                this.__lightCode += "  float dotFromDirection = dot(surfaceToLightDirection, - uLightDirection[i]); ";
+                this.__lightCode += "  float limitRange = uInnerLimit[i] - uOuterLimit[i]; ";
+                this.__lightCode += "  float inLight = clamp((dotFromDirection - uOuterLimit[i]) / limitRange, 0.0, 1.0); ";
+                this.__lightCode += "  float specular = inLight * pow(dot(transformedNormal.xyz, halfVector), uShininess[i]); ";
+                this.__lightCode += "  highp float light = inLight * max(dot(transformedNormal.xyz, surfaceToLightDirection), 0.0); ";
+                // this.__lightCode += "  if (dotFromDirection >= uLimit[i]) { "
+                // this.__lightCode += "  light = max(dot(transformedNormal.xyz, surfaceToLightDirection), 0.0);  "
+                // this.__lightCode += "   if (light > 0.0) { ";
+                // this.__lightCode += "     specular = pow(dot(transformedNormal.xyz, halfVector), uShininess[i]);"
+                // this.__lightCode += "   } ";
+                // this.__lightCode += "  } ";
+                this.__lightCode += "  vColor.rgb += specular * uLightColor2[i]; ";
+                this.__lightCode += "  reflectedLightColor += light * directionalLightColor; ";
+                this.__lightCode += " }";
                 this.__lightCode += " } ";
-                this.__lightCode += " } ";
-                //this.__lightCode += "vColor = vec4(vColor.rgb * reflectedLightColor, vColor.a); ";
-
-                // this.__lightCode = "reflectedLightColor = vec3(0.0,0,0);";
-                // this.__lightCode += "highp vec3 directionalLightColor = vec3(1, 1, 0);"
-                // this.__lightCode += "highp vec3 directionalVector = normalize(vec3(0.85, 0.8, 0.75));";
-                // this.__lightCode += "highp vec4 transformedNormal = uNormalMatrix * vec4(aVertexNormal, 1.0);";
-                // this.__lightCode += "highp float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);"
-                // this.__lightCode += "reflectedLightColor = (directionalLightColor * directional);";
             } else {
                 ligths = "";
                 this.__lightCode = "";
@@ -1594,7 +1629,7 @@ var RenderComponent = exports.RenderComponent = function (_Component) {
                 this.__vertexColors.splice(face * 4 * 4, 4 * 4, color.r, color.g, color.b, 1, color.r, color.g, color.b, 1, color.r, color.g, color.b, 1, color.r, color.g, color.b, 1);
 
                 var game = new _Game.Game();
-                var gl = game.canvas;
+                var gl = game.context;
                 this.__colorLocation = gl.getAttribLocation(this.__program, "aVertexColor");
                 this.__colorBuffer = gl.createBuffer();
                 gl.bindBuffer(gl.ARRAY_BUFFER, this.__colorBuffer);
@@ -1624,7 +1659,7 @@ var RenderComponent = exports.RenderComponent = function (_Component) {
                 this.__vertexColors.splice(vertex * 4, 4, color.r, color.g, color.b, 1);
 
                 var game = new _Game.Game();
-                var gl = game.canvas;
+                var gl = game.context;
                 this.__colorLocation = gl.getAttribLocation(this.__program, "aVertexColor");
                 this.__colorBuffer = gl.createBuffer();
                 gl.bindBuffer(gl.ARRAY_BUFFER, this.__colorBuffer);
@@ -1657,7 +1692,7 @@ var RenderComponent = exports.RenderComponent = function (_Component) {
         key: "color",
         set: function set(color) {
             var game = new _Game.Game();
-            var gl = game.canvas;
+            var gl = game.context;
 
             this.__vertexColors = [];
 
@@ -1680,167 +1715,6 @@ var RenderComponent = exports.RenderComponent = function (_Component) {
 
 /***/ }),
 /* 15 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Scene = exports.Scene = function () {
-    function Scene() {
-        _classCallCheck(this, Scene);
-
-        this.__gameObjectList = new Array();
-        this.__lights = new Array();
-    }
-
-    _createClass(Scene, [{
-        key: "addLight",
-        value: function addLight(light) {
-            this.__lights.push(light);
-        }
-    }, {
-        key: "addGameObject",
-        value: function addGameObject(gameObject) {
-            this.__gameObjectList.push(gameObject);
-            for (var key in gameObject.listComponents) {
-                var element = gameObject.listComponents[key];
-                //element.onLoad();
-            }
-        }
-    }, {
-        key: "gameObjectList",
-        get: function get() {
-            return this.__gameObjectList;
-        }
-    }, {
-        key: "lights",
-        get: function get() {
-            return this.__lights;
-        }
-    }, {
-        key: "ligthsInfo",
-        get: function get() {
-            var positionsVector = [],
-                colorVector = [],
-                typesVector = [];
-
-            this.__lights.forEach(function (light) {
-                positionsVector = positionsVector.concat([light.position.x, light.position.y, light.position.z]);
-                colorVector = colorVector.concat([light.color.r, light.color.g, light.color.b]);
-                typesVector = typesVector.concat([light.type()]);
-            });
-
-            return {
-                positions: positionsVector,
-                colors: colorVector,
-                types: typesVector
-            };
-        }
-    }]);
-
-    return Scene;
-}();
-
-/***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.ComponentList = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _Component = __webpack_require__(1);
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var ComponentList = exports.ComponentList = function (_Array) {
-    _inherits(ComponentList, _Array);
-
-    function ComponentList() {
-        _classCallCheck(this, ComponentList);
-
-        var _this = _possibleConstructorReturn(this, (ComponentList.__proto__ || Object.getPrototypeOf(ComponentList)).call(this));
-
-        Object.setPrototypeOf(_this, ComponentList.prototype);
-        return _this;
-    }
-    /**
-     * 
-     * 
-     * @param {Component} component 
-     * @memberof ComponentList
-     */
-
-
-    _createClass(ComponentList, [{
-        key: "addComponent",
-        value: function addComponent(component) {
-            this[component.tag] = component;
-        }
-    }, {
-        key: "contains",
-        value: function contains(component) {
-            return this.find(function (c) {
-                return c == component;
-            }) > 0;
-        }
-
-        /**
-         * 
-         * 
-         * @param {String} id 
-         * @returns {Comment} component
-         * @memberof ComponentList
-         */
-
-    }, {
-        key: "getByID",
-        value: function getByID(id) {
-            return this.find(function (c) {
-                return c.id == id;
-            });
-        }
-    }, {
-        key: "removeByID",
-        value: function removeByID(component) {
-            var indexOf = this.findIndex(function (c) {
-                return c.id == component.id;
-            });
-
-            if (indexOf != -1) {
-                this.splice(indexOf, 1);
-            }
-        }
-    }, {
-        key: "removeByKey",
-        value: function removeByKey(key) {
-            this.removeByID(this[key]);
-        }
-    }]);
-
-    return ComponentList;
-}(Array);
-
-/***/ }),
-/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1881,7 +1755,7 @@ exports.multiplyScalarAndAdd = multiplyScalarAndAdd;
 exports.exactEquals = exactEquals;
 exports.equals = equals;
 
-var _common = __webpack_require__(4);
+var _common = __webpack_require__(3);
 
 var glMatrix = _interopRequireWildcard(_common);
 
@@ -2715,7 +2589,7 @@ var mul = exports.mul = multiply;
 var sub = exports.sub = subtract;
 
 /***/ }),
-/* 18 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2765,7 +2639,7 @@ exports.str = str;
 exports.exactEquals = exactEquals;
 exports.equals = equals;
 
-var _common = __webpack_require__(4);
+var _common = __webpack_require__(3);
 
 var glMatrix = _interopRequireWildcard(_common);
 
@@ -3565,7 +3439,7 @@ var forEach = exports.forEach = function () {
 }();
 
 /***/ }),
-/* 19 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3607,7 +3481,7 @@ exports.str = str;
 exports.exactEquals = exactEquals;
 exports.equals = equals;
 
-var _common = __webpack_require__(4);
+var _common = __webpack_require__(3);
 
 var glMatrix = _interopRequireWildcard(_common);
 
@@ -4231,7 +4105,7 @@ var forEach = exports.forEach = function () {
 }();
 
 /***/ }),
-/* 20 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4246,7 +4120,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _GameObject2 = __webpack_require__(2);
 
-var _Game = __webpack_require__(3);
+var _Game = __webpack_require__(4);
 
 var _CubeRenderComponent = __webpack_require__(21);
 
@@ -4266,6 +4140,8 @@ var _NewTranslateComponent = __webpack_require__(12);
 
 var _Point3D = __webpack_require__(5);
 
+var _Color = __webpack_require__(6);
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -4278,7 +4154,8 @@ var CubeGameObject = exports.CubeGameObject = function (_GameObject) {
     function CubeGameObject(_ref) {
         var _ref$point = _ref.point,
             point = _ref$point === undefined ? new _Point3D.Point3D(0, 0, 0) : _ref$point,
-            color = _ref.color;
+            _ref$color = _ref.color,
+            color = _ref$color === undefined ? new _Color.Color() : _ref$color;
 
         _classCallCheck(this, CubeGameObject);
 
@@ -4306,6 +4183,186 @@ var CubeGameObject = exports.CubeGameObject = function (_GameObject) {
 }(_GameObject2.GameObject);
 
 /***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Scene = exports.Scene = function () {
+    function Scene() {
+        _classCallCheck(this, Scene);
+
+        this.__gameObjectList = new Array();
+        this.__lights = new Array();
+    }
+
+    _createClass(Scene, [{
+        key: "addLight",
+        value: function addLight(light) {
+            this.__lights.push(light);
+            for (var index = 0; index < this.__gameObjectList.length; index++) {
+                var object = this.__gameObjectList[index];
+                object.onLoad();
+            }
+        }
+    }, {
+        key: "addGameObject",
+        value: function addGameObject(gameObject) {
+            this.__gameObjectList.push(gameObject);
+            for (var key in gameObject.listComponents) {
+                var component = gameObject.listComponents[key];
+                component.onLoad();
+            }
+        }
+    }, {
+        key: "gameObjectList",
+        get: function get() {
+            return this.__gameObjectList;
+        }
+    }, {
+        key: "lights",
+        get: function get() {
+            return this.__lights;
+        }
+    }, {
+        key: "ligthsInfo",
+        get: function get() {
+            var positionsVector = [],
+                colorVector = [],
+                typesVector = [];
+            var secondColorVector = [],
+                shininessVector = [],
+                lookAtVector = [];
+            var lowLimmitVector = [],
+                highLimmitVector = [];
+
+            this.__lights.forEach(function (light) {
+                positionsVector = positionsVector.concat([light.position.x, light.position.y, light.position.z]);
+                colorVector = colorVector.concat([light.color.r, light.color.g, light.color.b]);
+                typesVector = typesVector.concat([light.type]);
+                shininessVector = shininessVector.concat([light.shininess]);
+                secondColorVector = secondColorVector.concat([light.secondColor.r, light.secondColor.g, light.secondColor.b]);
+                lookAtVector = lookAtVector.concat([light.targetLook[0], light.targetLook[1], light.targetLook[2]]);
+                lowLimmitVector = lowLimmitVector.concat(light.innerLimit);
+                highLimmitVector = highLimmitVector.concat(light.outerLimit);
+            });
+
+            return {
+                positions: positionsVector,
+                colors: colorVector,
+                types: typesVector,
+                shininess: shininessVector,
+                secondColor: secondColorVector,
+                lookAt: lookAtVector,
+                lowLimmit: lowLimmitVector,
+                highLimmit: highLimmitVector
+            };
+        }
+    }]);
+
+    return Scene;
+}();
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.ComponentList = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Component = __webpack_require__(1);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var ComponentList = exports.ComponentList = function (_Array) {
+    _inherits(ComponentList, _Array);
+
+    function ComponentList() {
+        _classCallCheck(this, ComponentList);
+
+        var _this = _possibleConstructorReturn(this, (ComponentList.__proto__ || Object.getPrototypeOf(ComponentList)).call(this));
+
+        Object.setPrototypeOf(_this, ComponentList.prototype);
+        return _this;
+    }
+    /**
+     * 
+     * 
+     * @param {Component} component 
+     * @memberof ComponentList
+     */
+
+
+    _createClass(ComponentList, [{
+        key: "addComponent",
+        value: function addComponent(component) {
+            this[component.tag] = component;
+        }
+    }, {
+        key: "contains",
+        value: function contains(component) {
+            return this.find(function (c) {
+                return c == component;
+            }) > 0;
+        }
+
+        /**
+         * 
+         * 
+         * @param {String} id 
+         * @returns {Comment} component
+         * @memberof ComponentList
+         */
+
+    }, {
+        key: "getByID",
+        value: function getByID(id) {
+            return this.find(function (c) {
+                return c.id == id;
+            });
+        }
+    }, {
+        key: "removeByID",
+        value: function removeByID(component) {
+            var indexOf = this.findIndex(function (c) {
+                return c.id == component.id;
+            });
+
+            if (indexOf != -1) {
+                this.splice(indexOf, 1);
+            }
+        }
+    }, {
+        key: "removeByKey",
+        value: function removeByKey(key) {
+            this.removeByID(this[key]);
+        }
+    }]);
+
+    return ComponentList;
+}(Array);
+
+/***/ }),
 /* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4323,9 +4380,9 @@ var _get = function get(object, property, receiver) { if (object === null) objec
 
 var _RenderComponent2 = __webpack_require__(14);
 
-var _JSUtils = __webpack_require__(6);
+var _JSUtils = __webpack_require__(7);
 
-var _Game = __webpack_require__(3);
+var _Game = __webpack_require__(4);
 
 var _glMatrix = __webpack_require__(0);
 
@@ -4335,11 +4392,11 @@ var _RotateComponent = __webpack_require__(8);
 
 var _ScaleComponent = __webpack_require__(10);
 
-var _Color = __webpack_require__(7);
+var _Color = __webpack_require__(6);
 
 var _GameObject = __webpack_require__(2);
 
-var _CubeGameObject = __webpack_require__(20);
+var _CubeGameObject = __webpack_require__(18);
 
 var _Point3D = __webpack_require__(5);
 
@@ -4408,18 +4465,22 @@ var CubeRenderComponent = exports.CubeRenderComponent = function (_RenderCompone
         _this.__indexBuffer = undefined;
         _this.__numberOfFace = 6;
         _this.__numberOfVertexPerFace = 4;
-        _this.__vertexNomralAttribute = undefined;
         _this.__normalMatrix = undefined;
-        _this.__lightDirection = undefined;
+        _this.__lightPosition = undefined;
         _this.__lightColor = undefined;
+        _this.__lightColor2 = undefined;
         _this.__lightType = undefined;
+        _this.__shininess = undefined;
+        _this.__lightDirection = undefined;
+        _this.__innerLimit = undefined;
+        _this.__outerLimit = undefined;
         return _this;
     }
 
     _createClass(CubeRenderComponent, [{
         key: "vertexShaderSource",
         value: function vertexShaderSource() {
-            return "\n        attribute vec4 aVertexPosition;\n        attribute vec4 aVertexColor;\n        attribute vec3 aVertexNormal;\n  \n        uniform mat4 uModelViewMatrix;\n        uniform mat4 uProjectionMatrix;\n        uniform mat4 uCameraMatrix;\n        uniform mat4 uNormalMatrix;\n  \n        varying lowp vec4 vColor;\n        varying highp vec3 reflectedLightColor;\n  \n        void main() {\n          gl_Position = uProjectionMatrix * uCameraMatrix * uModelViewMatrix * aVertexPosition;\n          reflectedLightColor = vec3(0.0,0.0,0.0);\n          vColor = aVertexColor;" + this.__lightCode + "}";
+            return "\n        attribute vec4 aVertexPosition;\n        attribute vec4 aVertexColor;\n        attribute vec3 aVertexNormal;\n  \n        uniform mat4 uModelViewMatrix;\n        uniform mat4 uProjectionMatrix;\n        uniform mat4 uCameraMatrix;\n        uniform mat4 uNormalMatrix;\n        uniform vec3 u_viewWorldPosition;\n  \n        varying lowp vec4 vColor;\n        varying highp vec3 reflectedLightColor;\n  \n        void main() {\n          gl_Position = uProjectionMatrix * uCameraMatrix * uModelViewMatrix * aVertexPosition;\n          reflectedLightColor = vec3(1.0,1.0,1.0);\n          vColor = aVertexColor;" + this.__lightCode + "}";
         }
     }, {
         key: "fragmentShaderSource",
@@ -4434,19 +4495,22 @@ var CubeRenderComponent = exports.CubeRenderComponent = function (_RenderCompone
             _get(CubeRenderComponent.prototype.__proto__ || Object.getPrototypeOf(CubeRenderComponent.prototype), "onLoad", this).call(this);
 
             var game = new _Game.Game();
-            var gl = game.canvas;
+            var gl = game.context;
 
             if (this.__program) {
                 gl.deleteProgram(this.__program);
             }
 
-            //console.log(gl.getShaderSource(this.vertexShader));
+            // console.log(gl.getShaderSource(this.vertexShader));
 
             this.__program = _JSUtils.JSUtils.createProgram(this.vertexShader, this.fragmentShader);
+            // console.log(gl.getAttribLocation(this.__program, "aVertexNormal"));
             this.__positionAttributeLocation = gl.getAttribLocation(this.__program, "aVertexPosition");
             this.__positionBuffer = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, this.__positionBuffer);
             gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+            this.__vertexNomralAttribute = 2;
 
             this.__indexBuffer = gl.createBuffer();
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer);
@@ -4458,18 +4522,23 @@ var CubeRenderComponent = exports.CubeRenderComponent = function (_RenderCompone
 
             this.__cameraMatrix = gl.getUniformLocation(this.__program, 'uCameraMatrix');
 
-            this.__vertexNomralAttribute = gl.getAttribLocation(this.__program, 'aVertexNormal');
-
             this.__normalBuffer = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, this.__normalBuffer);
             gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexNormals), gl.STATIC_DRAW);
 
             this.__normalMatrix = gl.getUniformLocation(this.__program, 'uNormalMatrix');
 
+            this.__cameraPosAttributeLocation = gl.getUniformLocation(this.__program, 'u_viewWorldPosition');;
+
             if (game.scene.lights.length > 0) {
                 this.__lightColor = gl.getUniformLocation(this.__program, 'uLightColor');
-                this.__lightDirection = gl.getUniformLocation(this.__program, 'uLightDirection');
+                this.__lightColor2 = gl.getUniformLocation(this.__program, 'uLightColor2');
+                this.__lightPosition = gl.getUniformLocation(this.__program, 'uLightPosition');
                 this.__lightType = gl.getUniformLocation(this.__program, 'uLightType');
+                this.__shininess = gl.getUniformLocation(this.__program, 'uShininess');
+                this.__lightDirection = gl.getUniformLocation(this.__program, 'uLightDirection');
+                this.__innerLimit = gl.getUniformLocation(this.__program, 'uInnerLimit');
+                this.__outerLimit = gl.getUniformLocation(this.__program, 'uOuterLimit');
                 //console.log(gl.getShaderSource(this.vertexShader));
             }
         }
@@ -4507,6 +4576,10 @@ var CubeRenderComponent = exports.CubeRenderComponent = function (_RenderCompone
 
             context.useProgram(this.__program);
 
+            var matTemp = _glMatrix.mat4.create();
+            _glMatrix.mat4.multiply(matTemp, camera.projection, camera.matrix);
+            //console.log(matTemp);
+
             context.uniformMatrix4fv(this.__projectionMatrix, false, camera.projection);
             context.uniformMatrix4fv(this.__modelViewMatrix, false, this.owner.matrix);
             context.uniformMatrix4fv(this.__cameraMatrix, false, camera.matrix);
@@ -4515,6 +4588,7 @@ var CubeRenderComponent = exports.CubeRenderComponent = function (_RenderCompone
             _glMatrix.mat4.invert(normalMatrix, this.owner.matrix);
             _glMatrix.mat4.transpose(normalMatrix, normalMatrix);
             context.uniformMatrix4fv(this.__normalMatrix, false, normalMatrix);
+            context.uniform3fv(this.__cameraPosAttributeLocation, camera.posisition.toVector());
             {
                 var numComponents = 3;
                 var _type2 = context.FLOAT;
@@ -4532,9 +4606,14 @@ var CubeRenderComponent = exports.CubeRenderComponent = function (_RenderCompone
 
             if (scene.lights.length > 0) {
                 var inf = scene.ligthsInfo;
-                context.uniform3fv(this.__lightDirection, inf.positions);
+                context.uniform3fv(this.__lightPosition, inf.positions);
+                context.uniform3fv(this.__lightDirection, inf.lookAt);
                 context.uniform3fv(this.__lightColor, inf.colors);
+                context.uniform3fv(this.__lightColor2, inf.secondColor);
+                context.uniform1fv(this.__innerLimit, inf.lowLimmit);
+                context.uniform1fv(this.__outerLimit, inf.highLimmit);
                 context.uniform1iv(this.__lightType, inf.types);
+                context.uniform1fv(this.__shininess, inf.shininess);
             }
 
             {
@@ -4675,93 +4754,6 @@ var NewRotateComponent = exports.NewRotateComponent = function (_Component) {
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.RenderSystem = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _Game = __webpack_require__(3);
-
-var _GameObject = __webpack_require__(2);
-
-var _Component = __webpack_require__(1);
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var RenderSystem = exports.RenderSystem = function () {
-    function RenderSystem() {
-        _classCallCheck(this, RenderSystem);
-    }
-
-    _createClass(RenderSystem, null, [{
-        key: "fireRenderListener",
-        value: function fireRenderListener() {
-            var game = new _Game.Game();
-
-            //game.canvas.viewport(0, 0, game.canvas.canvas.clientWidth, game.canvas.canvas.clientHeight);
-            // Clear the canvas
-            //game.canvas.clearColor(game.canvas.COLOR_BUFFER_BIT);
-            //game.canvas.clear(game.canvas.COLOR_BUFFER_BIT); 
-            game.canvas.clearColor(1.0, 1.0, 1.0, 1.0);
-            game.canvas.enable(game.canvas.CULL_FACE);
-            game.canvas.clear(game.canvas.COLOR_BUFFER_BIT | game.canvas.DEPTH_BUFFER_BIT);
-            game.canvas.clearDepth(1.0); // Clear everything
-            game.canvas.enable(game.canvas.DEPTH_TEST); // Enable depth testing
-            game.canvas.depthFunc(game.canvas.LEQUAL); // Near things obscure far things  
-
-            if (game.scene) {
-                var _iteratorNormalCompletion = true;
-                var _didIteratorError = false;
-                var _iteratorError = undefined;
-
-                try {
-                    for (var _iterator = game.scene.gameObjectList[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                        var gameObject = _step.value;
-
-                        if (gameObject instanceof _GameObject.GameObject) {
-                            for (var index in gameObject.listComponents) {
-                                var component = gameObject.listComponents[index];
-                                if (component instanceof _Component.Component) {
-                                    component.onRender(game.canvas, game.projection);
-                                }
-                            }
-                        }
-                    }
-                } catch (err) {
-                    _didIteratorError = true;
-                    _iteratorError = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion && _iterator.return) {
-                            _iterator.return();
-                        }
-                    } finally {
-                        if (_didIteratorError) {
-                            throw _iteratorError;
-                        }
-                    }
-                }
-            }
-        }
-    }, {
-        key: "tag",
-        get: function get() {
-            return "RENDER_SYSTEM";
-        }
-    }]);
-
-    return RenderSystem;
-}();
-
-/***/ }),
-/* 24 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.sub = exports.mul = undefined;
@@ -4790,7 +4782,7 @@ exports.equals = equals;
 exports.multiplyScalar = multiplyScalar;
 exports.multiplyScalarAndAdd = multiplyScalarAndAdd;
 
-var _common = __webpack_require__(4);
+var _common = __webpack_require__(3);
 
 var glMatrix = _interopRequireWildcard(_common);
 
@@ -5248,7 +5240,7 @@ var mul = exports.mul = multiply;
 var sub = exports.sub = subtract;
 
 /***/ }),
-/* 25 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5282,7 +5274,7 @@ exports.multiplyScalarAndAdd = multiplyScalarAndAdd;
 exports.exactEquals = exactEquals;
 exports.equals = equals;
 
-var _common = __webpack_require__(4);
+var _common = __webpack_require__(3);
 
 var glMatrix = _interopRequireWildcard(_common);
 
@@ -5790,7 +5782,7 @@ var mul = exports.mul = multiply;
 var sub = exports.sub = subtract;
 
 /***/ }),
-/* 26 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5845,7 +5837,7 @@ exports.multiplyScalarAndAdd = multiplyScalarAndAdd;
 exports.exactEquals = exactEquals;
 exports.equals = equals;
 
-var _common = __webpack_require__(4);
+var _common = __webpack_require__(3);
 
 var glMatrix = _interopRequireWildcard(_common);
 
@@ -7651,7 +7643,7 @@ var mul = exports.mul = multiply;
 var sub = exports.sub = subtract;
 
 /***/ }),
-/* 27 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7677,19 +7669,19 @@ exports.fromMat3 = fromMat3;
 exports.fromEuler = fromEuler;
 exports.str = str;
 
-var _common = __webpack_require__(4);
+var _common = __webpack_require__(3);
 
 var glMatrix = _interopRequireWildcard(_common);
 
-var _mat = __webpack_require__(17);
+var _mat = __webpack_require__(15);
 
 var mat3 = _interopRequireWildcard(_mat);
 
-var _vec = __webpack_require__(18);
+var _vec = __webpack_require__(16);
 
 var vec3 = _interopRequireWildcard(_vec);
 
-var _vec2 = __webpack_require__(19);
+var _vec2 = __webpack_require__(17);
 
 var vec4 = _interopRequireWildcard(_vec2);
 
@@ -8348,7 +8340,7 @@ var setAxes = exports.setAxes = function () {
 }();
 
 /***/ }),
-/* 28 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8393,7 +8385,7 @@ exports.str = str;
 exports.exactEquals = exactEquals;
 exports.equals = equals;
 
-var _common = __webpack_require__(4);
+var _common = __webpack_require__(3);
 
 var glMatrix = _interopRequireWildcard(_common);
 
@@ -8985,6 +8977,93 @@ var forEach = exports.forEach = function () {
 }();
 
 /***/ }),
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.RenderSystem = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Game = __webpack_require__(4);
+
+var _GameObject = __webpack_require__(2);
+
+var _Component = __webpack_require__(1);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var RenderSystem = exports.RenderSystem = function () {
+    function RenderSystem() {
+        _classCallCheck(this, RenderSystem);
+    }
+
+    _createClass(RenderSystem, null, [{
+        key: "fireRenderListener",
+        value: function fireRenderListener() {
+            var game = new _Game.Game();
+
+            //game.canvas.viewport(0, 0, game.canvas.canvas.clientWidth, game.canvas.canvas.clientHeight);
+            // Clear the canvas
+            //game.canvas.clearColor(game.canvas.COLOR_BUFFER_BIT);
+            //game.canvas.clear(game.canvas.COLOR_BUFFER_BIT); 
+            game.context.clearColor(1.0, 1.0, 1.0, 1.0);
+            game.context.enable(game.context.CULL_FACE);
+            game.context.clear(game.context.COLOR_BUFFER_BIT | game.context.DEPTH_BUFFER_BIT);
+            game.context.clearDepth(1.0); // Clear everything
+            game.context.enable(game.context.DEPTH_TEST); // Enable depth testing
+            game.context.depthFunc(game.context.LEQUAL); // Near things obscure far things  
+
+            if (game.scene) {
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                    for (var _iterator = game.scene.gameObjectList[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var gameObject = _step.value;
+
+                        if (gameObject instanceof _GameObject.GameObject) {
+                            for (var index in gameObject.listComponents) {
+                                var component = gameObject.listComponents[index];
+                                if (component instanceof _Component.Component) {
+                                    component.onRender(game.context, game.projection);
+                                }
+                            }
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
+                }
+            }
+        }
+    }, {
+        key: "tag",
+        get: function get() {
+            return "RENDER_SYSTEM";
+        }
+    }]);
+
+    return RenderSystem;
+}();
+
+/***/ }),
 /* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8998,7 +9077,7 @@ exports.LogicSystem = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _Game = __webpack_require__(3);
+var _Game = __webpack_require__(4);
 
 var _GameObject = __webpack_require__(2);
 
@@ -9070,15 +9149,72 @@ var LogicSystem = exports.LogicSystem = function () {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.OrthogonalCamera = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _glMatrix = __webpack_require__(0);
+
+var _Point3D = __webpack_require__(5);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var OrthogonalCamera = exports.OrthogonalCamera = function () {
+    function OrthogonalCamera(_ref) {
+        var left = _ref.left,
+            right = _ref.right,
+            bottom = _ref.bottom,
+            top = _ref.top,
+            near = _ref.near,
+            far = _ref.far;
+
+        _classCallCheck(this, OrthogonalCamera);
+
+        this.__projection = _glMatrix.mat4.create();
+        _glMatrix.mat4.ortho(this.__projection, left, right, bottom, top, near, far);
+    }
+
+    _createClass(OrthogonalCamera, [{
+        key: "projection",
+        get: function get() {
+            return this.__projection;
+        }
+    }, {
+        key: "posisition",
+        get: function get() {
+            return new _Point3D.Point3D(0, 0, 0);
+        }
+    }, {
+        key: "matrix",
+        get: function get() {
+            return _glMatrix.mat4.create();
+        }
+    }]);
+
+    return OrthogonalCamera;
+}();
+
+/***/ }),
+/* 31 */,
+/* 32 */,
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 exports.TriangleGameObject = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _GameObject2 = __webpack_require__(2);
 
-var _TriangleRenderComponent = __webpack_require__(31);
+var _TriangleRenderComponent = __webpack_require__(34);
 
-var _Game = __webpack_require__(3);
+var _Game = __webpack_require__(4);
 
 var _Point3D = __webpack_require__(5);
 
@@ -9131,7 +9267,7 @@ var TriangleGameObject = exports.TriangleGameObject = function (_GameObject) {
 }(_GameObject2.GameObject);
 
 /***/ }),
-/* 31 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9148,9 +9284,9 @@ var _get = function get(object, property, receiver) { if (object === null) objec
 
 var _RenderComponent2 = __webpack_require__(14);
 
-var _JSUtils = __webpack_require__(6);
+var _JSUtils = __webpack_require__(7);
 
-var _Game = __webpack_require__(3);
+var _Game = __webpack_require__(4);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -9267,72 +9403,27 @@ var TriangleRenderComponent = exports.TriangleRenderComponent = function (_Rende
 }(_RenderComponent2.RenderComponent);
 
 /***/ }),
-/* 32 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.OrthogonalCamera = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _glMatrix = __webpack_require__(0);
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var OrthogonalCamera = exports.OrthogonalCamera = function () {
-    function OrthogonalCamera(_ref) {
-        var left = _ref.left,
-            right = _ref.right,
-            bottom = _ref.bottom,
-            top = _ref.top,
-            near = _ref.near,
-            far = _ref.far;
-
-        _classCallCheck(this, OrthogonalCamera);
-
-        this.__projection = _glMatrix.mat4.create();
-        _glMatrix.mat4.ortho(this.__projection, left, right, bottom, top, near, far);
-    }
-
-    _createClass(OrthogonalCamera, [{
-        key: "projection",
-        get: function get() {
-            return this.__projection;
-        }
-    }, {
-        key: "matrix",
-        get: function get() {
-            return _glMatrix.mat4.create();
-        }
-    }]);
-
-    return OrthogonalCamera;
-}();
-
-/***/ }),
-/* 33 */,
-/* 34 */,
 /* 35 */,
-/* 36 */
+/* 36 */,
+/* 37 */,
+/* 38 */,
+/* 39 */,
+/* 40 */,
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _Scene = __webpack_require__(15);
+var _Scene = __webpack_require__(19);
 
-var _Game = __webpack_require__(3);
+var _Game = __webpack_require__(4);
 
-var _TriangleGameObject = __webpack_require__(30);
+var _TriangleGameObject = __webpack_require__(33);
 
-var _Color = __webpack_require__(7);
+var _Color = __webpack_require__(6);
 
-var _CubeGameObject = __webpack_require__(20);
+var _CubeGameObject = __webpack_require__(18);
 
 var _Point2D = __webpack_require__(11);
 
@@ -9344,7 +9435,7 @@ var _glMatrix = __webpack_require__(0);
 
 var _TranslateComponent = __webpack_require__(9);
 
-var _OrthogonalCamera = __webpack_require__(32);
+var _OrthogonalCamera = __webpack_require__(30);
 
 var _NewRotateComponent = __webpack_require__(22);
 

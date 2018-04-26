@@ -7,9 +7,9 @@ import { LogicSystem } from "../system/LogicSystem";
 let instace = undefined;
 
 export class Game {
-    constructor(canvas, scene, camera) {
+    constructor(context, scene, camera) {
         if (!instace) {
-            this.__canvas = canvas;
+            this.__context = context;
             this.__scene = scene;
             this.__listComponents = new ComponentList();
             this.__requestAnimFrame = undefined;
@@ -24,8 +24,8 @@ export class Game {
         return instace;
     }
 
-    get canvas() {
-        return this.__canvas;
+    get context() {
+        return this.__context;
     }
 
     get scene() {

@@ -31,6 +31,15 @@ export class DirectionalLight{
         //  precisa ser feito o resto do código de recarregar a cenas.
     }
 
+    get shininess() {
+        return 0;
+    }
+
+    get secondColor() {
+        let c = new Color({r:0, b:0, g : 0});
+        return c;
+    }
+
     static type(){
         return 0;
     }

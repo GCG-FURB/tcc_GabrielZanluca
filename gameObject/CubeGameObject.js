@@ -9,9 +9,10 @@ import { NewRotateComponent } from "../component/NewRotateComponent";
 import { NewScaleComponent } from "../component/NewScaleComponent";
 import { NewTranslateComponent } from "../component/NewTranslateComponent";
 import { Point3D } from "../geometric/Point3D";
+import { Color } from "../geometric/Color";
 
 export class CubeGameObject extends GameObject{
-    constructor({point =  new Point3D(0,0,0), color}) {
+    constructor({point =  new Point3D(0,0,0), color = new Color()}) {
         super({oringin : point, color});
         this.__listComponents.addComponent(new CubeRenderComponent({owner : this}));
         this.render.onLoad();

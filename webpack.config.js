@@ -3,7 +3,10 @@ var path = require('path');
 
  module.exports = {
      entry: {
-        cube: './app/main2.js',
+        cubesOrtho: './app/cubesOrtho.js',
+        cubesPerspective: './app/cubesPerspective.js',
+        cubesSpotLighting : './app/cubesSpotLighting.js',
+        cube : "./app/main2.js",
         triangle: './app/main.js'
      },
      output: {

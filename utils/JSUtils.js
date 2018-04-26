@@ -33,7 +33,7 @@ export class JSUtils {
      */
     static createShader(type, source) {
         let game = new Game();
-        let gl = game.canvas; 
+        let gl = game.context; 
         let shader = gl.createShader(type);
         gl.shaderSource(shader, source);
         gl.compileShader(shader);
@@ -48,7 +48,7 @@ export class JSUtils {
 
     static createProgram(vertexShader, fragmentShader) {
         let game = new Game();
-        let gl = game.canvas;
+        let gl = game.context;
         let program = gl.createProgram();
         gl.attachShader(program, vertexShader);
         gl.attachShader(program, fragmentShader);
