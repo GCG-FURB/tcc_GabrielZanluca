@@ -56,7 +56,7 @@ import { SpotLight } from "../Light/SpotLight";
   let l2 = new DirectionalLight({color : color7, position : new Point3D(0.85, 0.8, 0.75)});
   let l3 = new DirectionalLight({color : new Color({r:1, g:1, b:1, a:1}), position : new Point3D(-0.17, 2.24, -3.15)});
   let lp = new PointLight({position : new Point3D(-0.17, 40.24, -5), shininess : 3.9, secondColor : color10, color : color9});
-  let sl = new SpotLight({position : new Point3D(-6, 1.23, 7.50), color : color9, innerLimit : 5, outerLimit : 20, target : new Point3D(0,0,0)});
+  let sl = new SpotLight({position : new Point3D(-6, 2.25, 7.50), color : color9, innerLimit : 20.5, outerLimit : 31.5, target : new Point3D(-2,0,0)});
   // scene.addLight(l);
   // scene.addLight(lp);
   // scene.addLight(l2);
@@ -73,7 +73,7 @@ import { SpotLight } from "../Light/SpotLight";
   // ts1.z = -5;
   let s1 = cube.listComponents[ScaleComponent.tag];
   //s1.z = 5;
-  // s1.x = 3;
+  s1.x = 3;
 
   let t2 = cube2.listComponents[TranslateComponent.tag];
       

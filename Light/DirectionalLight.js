@@ -40,6 +40,18 @@ export class DirectionalLight{
         return c;
     }
 
+    get innerLimit(){
+        return 0;
+    }
+
+    get outerLimit(){
+        return 0;
+    }
+
+    get targetLook(){
+        return [0, 0, 0];
+    }
+
     static type(){
         return 0;
     }

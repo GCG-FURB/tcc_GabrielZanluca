@@ -124,6 +124,13 @@ export class RenderComponent extends Component {
         return this.__program;
     }
 
+    renderChild(context, parentMatrix) {
+        for (let i = 0; i < this.owner.child.length; i++) {
+            const child = this.owner.child[i];
+            child.render.onRender(context, parentMatrix);            
+        }
+    }
+
     /**
      * 
      * @param {Color} color

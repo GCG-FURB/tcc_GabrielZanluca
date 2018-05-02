@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 37);
+/******/ 	return __webpack_require__(__webpack_require__.s = 39);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -333,9 +333,27 @@ var GameObject = exports.GameObject = function () {
         this.__colorLocation = undefined;
         this.__colorBuffer = undefined;
         this.translate.translation = [oringin.x, oringin.y, oringin.z];
+        this.__child = [];
     }
 
     _createClass(GameObject, [{
+        key: "addGameOdbject",
+
+
+        /**
+         * 
+         * 
+         * @param {GameObject} gameObject 
+         * @memberof GameObject
+         */
+        value: function addGameOdbject(gameObject) {
+            this.__child.push(gameObject);
+            for (var componentKey in gameObject.listComponents) {
+                var component = gameObject.listComponents[componentKey];
+                component.onLoad();
+            }
+        }
+    }, {
         key: "onLoad",
         value: function onLoad() {}
     }, {
@@ -428,6 +446,11 @@ var GameObject = exports.GameObject = function () {
         key: "render",
         get: function get() {
             return undefined;
+        }
+    }, {
+        key: "child",
+        get: function get() {
+            return this.__child;
         }
     }]);
 
@@ -1607,6 +1630,21 @@ var RenderComponent = exports.RenderComponent = function (_Component) {
             return "Please implement abstract method fragmentShaderSource.";
         }
     }, {
+        key: "renderChild",
+        value: function renderChild(context, parentMatrix) {
+            for (var i = 0; i < this.owner.child.length; i++) {
+                var child = this.owner.child[i];
+                child.render.onRender(context, parentMatrix);
+            }
+        }
+
+        /**
+         * 
+         * @param {Color} color
+         * @memberof CubeRenderComponent
+         */
+
+    }, {
         key: "colorFace",
 
         /**
@@ -1681,13 +1719,6 @@ var RenderComponent = exports.RenderComponent = function (_Component) {
         get: function get() {
             return this.__program;
         }
-
-        /**
-         * 
-         * @param {Color} color
-         * @memberof CubeRenderComponent
-         */
-
     }, {
         key: "color",
         set: function set(color) {
@@ -4218,8 +4249,8 @@ var Scene = exports.Scene = function () {
         key: "addGameObject",
         value: function addGameObject(gameObject) {
             this.__gameObjectList.push(gameObject);
-            for (var key in gameObject.listComponents) {
-                var component = gameObject.listComponents[key];
+            for (var componentKey in gameObject.listComponents) {
+                var component = gameObject.listComponents[componentKey];
                 component.onLoad();
             }
         }
@@ -4579,13 +4610,16 @@ var CubeRenderComponent = exports.CubeRenderComponent = function (_RenderCompone
             var matTemp = _glMatrix.mat4.create();
             _glMatrix.mat4.multiply(matTemp, camera.projection, camera.matrix);
             //console.log(matTemp);
+            var viewMatrix = _glMatrix.mat4.create();
+            _glMatrix.mat4.multiply(viewMatrix, projctionMareix, this.__owner.matrix);
 
             context.uniformMatrix4fv(this.__projectionMatrix, false, camera.projection);
-            context.uniformMatrix4fv(this.__modelViewMatrix, false, this.owner.matrix);
+            context.uniformMatrix4fv(this.__modelViewMatrix, false, viewMatrix);
             context.uniformMatrix4fv(this.__cameraMatrix, false, camera.matrix);
 
             var normalMatrix = _glMatrix.mat4.create();
-            _glMatrix.mat4.invert(normalMatrix, this.owner.matrix);
+
+            _glMatrix.mat4.invert(normalMatrix, viewMatrix);
             _glMatrix.mat4.transpose(normalMatrix, normalMatrix);
             context.uniformMatrix4fv(this.__normalMatrix, false, normalMatrix);
             context.uniform3fv(this.__cameraPosAttributeLocation, camera.posisition.toVector());
@@ -4622,6 +4656,7 @@ var CubeRenderComponent = exports.CubeRenderComponent = function (_RenderCompone
                 var _type3 = context.UNSIGNED_SHORT;
                 context.drawElements(context.TRIANGLES, vertexCount, _type3, _offset3);
             }
+            this.renderChild(context, viewMatrix);
         }
     }, {
         key: "tag",
@@ -9111,6 +9146,38 @@ var LogicSystem = exports.LogicSystem = function () {
                                     component.onUpdate(deltaTime);
                                 }
                             }
+
+                            var _iteratorNormalCompletion2 = true;
+                            var _didIteratorError2 = false;
+                            var _iteratorError2 = undefined;
+
+                            try {
+                                for (var _iterator2 = gameObject.child[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                                    var child = _step2.value;
+
+                                    if (child instanceof _GameObject.GameObject) {
+                                        for (var _index in child.listComponents) {
+                                            var _component = child.listComponents[_index];
+                                            if (_component instanceof _Component.Component) {
+                                                _component.onUpdate(deltaTime);
+                                            }
+                                        }
+                                    }
+                                }
+                            } catch (err) {
+                                _didIteratorError2 = true;
+                                _iteratorError2 = err;
+                            } finally {
+                                try {
+                                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                                        _iterator2.return();
+                                    }
+                                } finally {
+                                    if (_didIteratorError2) {
+                                        throw _iteratorError2;
+                                    }
+                                }
+                            }
                         }
                     }
                 } catch (err) {
@@ -9140,8 +9207,7 @@ var LogicSystem = exports.LogicSystem = function () {
 }();
 
 /***/ }),
-/* 30 */,
-/* 31 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9238,6 +9304,7 @@ var PerspectiveCamera = exports.PerspectiveCamera = function () {
 }();
 
 /***/ }),
+/* 31 */,
 /* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -9344,7 +9411,9 @@ var SpotLight = exports.SpotLight = function () {
 /* 34 */,
 /* 35 */,
 /* 36 */,
-/* 37 */
+/* 37 */,
+/* 38 */,
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9354,7 +9423,7 @@ var _Scene = __webpack_require__(19);
 
 var _Point3D = __webpack_require__(5);
 
-var _PerspectiveCamera = __webpack_require__(31);
+var _PerspectiveCamera = __webpack_require__(30);
 
 var _Game = __webpack_require__(4);
 
@@ -9374,8 +9443,6 @@ var context = canvas.getContext("webgl2");
 var posLight = new _Point3D.Point3D(0, 0, 3);
 var limitLight = 20;
 
-//let spot = new SpotLight({position : posLight, limit : limitLight});
-
 var game = new _Game.Game(context, scene, camera);
 
 var red = new _Color.Color({ r: 1 });
@@ -9384,6 +9451,11 @@ var green = new _Color.Color({ g: 1 });
 var turquoise = new _Color.Color({ g: 1, b: 1 });
 var yellow = new _Color.Color({ g: 1, r: 1 });
 var purple = new _Color.Color({ b: 1, r: 1 });
+var white = new _Color.Color({ r: 1, g: 1, b: 1 });
+
+var sl = new _SpotLight.SpotLight({ position: new _Point3D.Point3D(2, 8, 5), color: white, innerLimit: 5, outerLimit: 20, target: new _Point3D.Point3D(0, 0, 0) });
+
+scene.addLight(sl);
 
 var cube = new _CubeGameObject.CubeGameObject({ color: red });
 var cube2 = new _CubeGameObject.CubeGameObject({ color: blue });

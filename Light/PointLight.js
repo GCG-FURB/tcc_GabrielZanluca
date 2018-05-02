@@ -53,6 +53,18 @@ export class PointLight{
         return this.__secondColor;
     }
 
+    get innerLimit(){
+        return 0;
+    }
+
+    get outerLimit(){
+        return 0;
+    }
+
+    get targetLook(){
+        return [0, 0, 0];
+    }
+
     static type(){
         return 1;
     }

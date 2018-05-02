@@ -51,8 +51,8 @@ export class Scene {
 
     addGameObject(gameObject){
         this.__gameObjectList.push(gameObject);
-        for (let key in gameObject.listComponents) {
-                let component = gameObject.listComponents[key];
+        for (let componentKey in gameObject.listComponents) {
+                let component = gameObject.listComponents[componentKey];
                 component.onLoad();
         }
     }

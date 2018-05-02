@@ -7,7 +7,10 @@ var path = require('path');
         cubesPerspective: './app/cubesPerspective.js',
         cubesSpotLighting : './app/cubesSpotLighting.js',
         cube : "./app/main2.js",
-        triangle: './app/main.js'
+        triangle: './app/main.js',
+        cubesDirectionalLight : "./app/cubesDirectionalLight.js",
+        cubesPointLight : "./app/cubesPointLight.js",
+        graph : "./app/graph.js"
      },
      output: {
         path: path.resolve(__dirname, 'build'),

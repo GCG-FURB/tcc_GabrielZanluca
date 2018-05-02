@@ -4,7 +4,7 @@ import { PerspectiveCamera } from "../game/PerspectiveCamera";
 import { Game } from "../game/Game";
 import { Color } from "../geometric/Color";
 import { CubeGameObject } from "../gameObject/CubeGameObject";
-import { SpotLight } from "../Light/SpotLight";
+import { DirectionalLight } from "../Light/DirectionalLight";
 
 let scene = new Scene();
 let camera = new PerspectiveCamera({near: 0.1, far : 500, aspect : 1, fovy : 45 * Math.PI / 180, position : new Point3D(0, 0, 15)});
@@ -12,9 +12,6 @@ let camera = new PerspectiveCamera({near: 0.1, far : 500, aspect : 1, fovy : 45 
 let canvas = document.getElementById("glCanvas");
 // @ts-ignore
 let context = canvas.getContext("webgl2");
-
-let posLight = new Point3D(0,0,3);
-let limitLight = 20;
 
 let game = new Game(context, scene, camera);
 
@@ -26,13 +23,13 @@ let yellow = new Color({g : 1, r: 1});
 let purple = new Color({b : 1, r: 1});
 let white = new Color({r : 1, g : 1, b : 1});
 
-let sl = new SpotLight({position : new Point3D(2, 8, 5), color : white, innerLimit : 5, outerLimit : 20, target : new Point3D(0,0,0)});
-
-scene.addLight(sl);
-
 let cube = new CubeGameObject({color : red});
 let cube2 = new CubeGameObject({color : blue});
 let cube3 = new CubeGameObject({color : green});
+
+let directLight = new DirectionalLight({color : white, position : new Point3D(2, 8, 5)});
+
+scene.addLight(directLight);
 
 cube.rotation.onUpdate = (deltaTime) => {
     cube.rotation.z = 2 * deltaTime;

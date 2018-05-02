@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 36);
+/******/ 	return __webpack_require__(__webpack_require__.s = 38);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -333,9 +333,27 @@ var GameObject = exports.GameObject = function () {
         this.__colorLocation = undefined;
         this.__colorBuffer = undefined;
         this.translate.translation = [oringin.x, oringin.y, oringin.z];
+        this.__child = [];
     }
 
     _createClass(GameObject, [{
+        key: "addGameOdbject",
+
+
+        /**
+         * 
+         * 
+         * @param {GameObject} gameObject 
+         * @memberof GameObject
+         */
+        value: function addGameOdbject(gameObject) {
+            this.__child.push(gameObject);
+            for (var componentKey in gameObject.listComponents) {
+                var component = gameObject.listComponents[componentKey];
+                component.onLoad();
+            }
+        }
+    }, {
         key: "onLoad",
         value: function onLoad() {}
     }, {
@@ -428,6 +446,11 @@ var GameObject = exports.GameObject = function () {
         key: "render",
         get: function get() {
             return undefined;
+        }
+    }, {
+        key: "child",
+        get: function get() {
+            return this.__child;
         }
     }]);
 
@@ -1607,6 +1630,21 @@ var RenderComponent = exports.RenderComponent = function (_Component) {
             return "Please implement abstract method fragmentShaderSource.";
         }
     }, {
+        key: "renderChild",
+        value: function renderChild(context, parentMatrix) {
+            for (var i = 0; i < this.owner.child.length; i++) {
+                var child = this.owner.child[i];
+                child.render.onRender(context, parentMatrix);
+            }
+        }
+
+        /**
+         * 
+         * @param {Color} color
+         * @memberof CubeRenderComponent
+         */
+
+    }, {
         key: "colorFace",
 
         /**
@@ -1681,13 +1719,6 @@ var RenderComponent = exports.RenderComponent = function (_Component) {
         get: function get() {
             return this.__program;
         }
-
-        /**
-         * 
-         * @param {Color} color
-         * @memberof CubeRenderComponent
-         */
-
     }, {
         key: "color",
         set: function set(color) {
@@ -4218,8 +4249,8 @@ var Scene = exports.Scene = function () {
         key: "addGameObject",
         value: function addGameObject(gameObject) {
             this.__gameObjectList.push(gameObject);
-            for (var key in gameObject.listComponents) {
-                var component = gameObject.listComponents[key];
+            for (var componentKey in gameObject.listComponents) {
+                var component = gameObject.listComponents[componentKey];
                 component.onLoad();
             }
         }
@@ -4579,13 +4610,16 @@ var CubeRenderComponent = exports.CubeRenderComponent = function (_RenderCompone
             var matTemp = _glMatrix.mat4.create();
             _glMatrix.mat4.multiply(matTemp, camera.projection, camera.matrix);
             //console.log(matTemp);
+            var viewMatrix = _glMatrix.mat4.create();
+            _glMatrix.mat4.multiply(viewMatrix, projctionMareix, this.__owner.matrix);
 
             context.uniformMatrix4fv(this.__projectionMatrix, false, camera.projection);
-            context.uniformMatrix4fv(this.__modelViewMatrix, false, this.owner.matrix);
+            context.uniformMatrix4fv(this.__modelViewMatrix, false, viewMatrix);
             context.uniformMatrix4fv(this.__cameraMatrix, false, camera.matrix);
 
             var normalMatrix = _glMatrix.mat4.create();
-            _glMatrix.mat4.invert(normalMatrix, this.owner.matrix);
+
+            _glMatrix.mat4.invert(normalMatrix, viewMatrix);
             _glMatrix.mat4.transpose(normalMatrix, normalMatrix);
             context.uniformMatrix4fv(this.__normalMatrix, false, normalMatrix);
             context.uniform3fv(this.__cameraPosAttributeLocation, camera.posisition.toVector());
@@ -4622,6 +4656,7 @@ var CubeRenderComponent = exports.CubeRenderComponent = function (_RenderCompone
                 var _type3 = context.UNSIGNED_SHORT;
                 context.drawElements(context.TRIANGLES, vertexCount, _type3, _offset3);
             }
+            this.renderChild(context, viewMatrix);
         }
     }, {
         key: "tag",
@@ -9111,6 +9146,38 @@ var LogicSystem = exports.LogicSystem = function () {
                                     component.onUpdate(deltaTime);
                                 }
                             }
+
+                            var _iteratorNormalCompletion2 = true;
+                            var _didIteratorError2 = false;
+                            var _iteratorError2 = undefined;
+
+                            try {
+                                for (var _iterator2 = gameObject.child[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                                    var child = _step2.value;
+
+                                    if (child instanceof _GameObject.GameObject) {
+                                        for (var _index in child.listComponents) {
+                                            var _component = child.listComponents[_index];
+                                            if (_component instanceof _Component.Component) {
+                                                _component.onUpdate(deltaTime);
+                                            }
+                                        }
+                                    }
+                                }
+                            } catch (err) {
+                                _didIteratorError2 = true;
+                                _iteratorError2 = err;
+                            } finally {
+                                try {
+                                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                                        _iterator2.return();
+                                    }
+                                } finally {
+                                    if (_didIteratorError2) {
+                                        throw _iteratorError2;
+                                    }
+                                }
+                            }
                         }
                     }
                 } catch (err) {
@@ -9140,8 +9207,7 @@ var LogicSystem = exports.LogicSystem = function () {
 }();
 
 /***/ }),
-/* 30 */,
-/* 31 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9238,11 +9304,14 @@ var PerspectiveCamera = exports.PerspectiveCamera = function () {
 }();
 
 /***/ }),
+/* 31 */,
 /* 32 */,
 /* 33 */,
 /* 34 */,
 /* 35 */,
-/* 36 */
+/* 36 */,
+/* 37 */,
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9252,7 +9321,7 @@ var _Scene = __webpack_require__(19);
 
 var _Point3D = __webpack_require__(5);
 
-var _PerspectiveCamera = __webpack_require__(31);
+var _PerspectiveCamera = __webpack_require__(30);
 
 var _Game = __webpack_require__(4);
 

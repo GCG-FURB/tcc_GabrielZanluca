@@ -15,6 +15,17 @@ export class LogicSystem {
                             component.onUpdate(deltaTime);
                         }
                     }
+
+                    for(let child of gameObject.child){
+                        if (child instanceof GameObject) {
+                            for (let index in child.listComponents) {
+                                let component = child.listComponents[index];
+                                if (component instanceof Component){
+                                    component.onUpdate(deltaTime);
+                                }  
+                            }
+                        }
+                    }
                 }
             }  
         }

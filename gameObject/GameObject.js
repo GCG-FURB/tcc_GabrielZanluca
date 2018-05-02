@@ -31,6 +31,7 @@ export class GameObject {
         this.__colorLocation = undefined;
         this.__colorBuffer = undefined;
         this.translate.translation = [oringin.x, oringin.y, oringin.z];
+        this.__child = [];
     }
 
     get id() {
@@ -84,6 +85,20 @@ export class GameObject {
         return undefined;
     }
 
+    /**
+     * 
+     * 
+     * @param {GameObject} gameObject 
+     * @memberof GameObject
+     */
+    addGameOdbject(gameObject){
+        this.__child.push(gameObject);
+        for (let componentKey in gameObject.listComponents) {
+            let component = gameObject.listComponents[componentKey];
+            component.onLoad();
+        }
+    }
+
     onLoad() { }
 
     destroy() {
@@ -93,6 +108,10 @@ export class GameObject {
             }
         }
         //this.__layer.listGameObjects =  ArrayUtils.removeElement(this.__layer.listGameObjects, this);
+    }
+
+    get child(){
+        return this.__child;
     }
 
 }

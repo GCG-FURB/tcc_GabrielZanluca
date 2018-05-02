@@ -238,13 +238,16 @@ export class CubeRenderComponent extends RenderComponent{
         let matTemp = mat4.create();
         mat4.multiply(matTemp, camera.projection, camera.matrix);
         //console.log(matTemp);
+        let viewMatrix = mat4.create();
+        mat4.multiply(viewMatrix, projctionMareix, this.__owner.matrix);
         
         context.uniformMatrix4fv(this.__projectionMatrix, false, camera.projection);
-        context.uniformMatrix4fv(this.__modelViewMatrix, false, this.owner.matrix);
+        context.uniformMatrix4fv(this.__modelViewMatrix, false, viewMatrix);
         context.uniformMatrix4fv(this.__cameraMatrix, false, camera.matrix);
 
         let normalMatrix = mat4.create();
-        mat4.invert(normalMatrix, this.owner.matrix);
+
+        mat4.invert(normalMatrix, viewMatrix);
         mat4.transpose(normalMatrix, normalMatrix);
         context.uniformMatrix4fv(this.__normalMatrix, false, normalMatrix);
         context.uniform3fv(this.__cameraPosAttributeLocation, camera.posisition.toVector());
@@ -287,7 +290,7 @@ export class CubeRenderComponent extends RenderComponent{
             let type = context.UNSIGNED_SHORT;
             context.drawElements(context.TRIANGLES, vertexCount, type, offset);
         }
-
+        this.renderChild(context, viewMatrix);        
 
     }
 
