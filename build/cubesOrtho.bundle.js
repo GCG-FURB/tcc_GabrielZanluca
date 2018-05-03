@@ -9146,38 +9146,7 @@ var LogicSystem = exports.LogicSystem = function () {
                                     component.onUpdate(deltaTime);
                                 }
                             }
-
-                            var _iteratorNormalCompletion2 = true;
-                            var _didIteratorError2 = false;
-                            var _iteratorError2 = undefined;
-
-                            try {
-                                for (var _iterator2 = gameObject.child[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                                    var child = _step2.value;
-
-                                    if (child instanceof _GameObject.GameObject) {
-                                        for (var _index in child.listComponents) {
-                                            var _component = child.listComponents[_index];
-                                            if (_component instanceof _Component.Component) {
-                                                _component.onUpdate(deltaTime);
-                                            }
-                                        }
-                                    }
-                                }
-                            } catch (err) {
-                                _didIteratorError2 = true;
-                                _iteratorError2 = err;
-                            } finally {
-                                try {
-                                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                                        _iterator2.return();
-                                    }
-                                } finally {
-                                    if (_didIteratorError2) {
-                                        throw _iteratorError2;
-                                    }
-                                }
-                            }
+                            LogicSystem.updateChild(gameObject.child, deltaTime);
                         }
                     }
                 } catch (err) {
@@ -9192,6 +9161,40 @@ var LogicSystem = exports.LogicSystem = function () {
                         if (_didIteratorError) {
                             throw _iteratorError;
                         }
+                    }
+                }
+            }
+        }
+    }, {
+        key: "updateChild",
+        value: function updateChild(child, deltaTime) {
+            var _iteratorNormalCompletion2 = true;
+            var _didIteratorError2 = false;
+            var _iteratorError2 = undefined;
+
+            try {
+                for (var _iterator2 = child[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    var gameObject = _step2.value;
+
+                    for (var index in gameObject.listComponents) {
+                        var component = gameObject.listComponents[index];
+                        if (component instanceof _Component.Component) {
+                            component.onUpdate(deltaTime);
+                        }
+                    }
+                    LogicSystem.updateChild(gameObject.child, deltaTime);
+                }
+            } catch (err) {
+                _didIteratorError2 = true;
+                _iteratorError2 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                        _iterator2.return();
+                    }
+                } finally {
+                    if (_didIteratorError2) {
+                        throw _iteratorError2;
                     }
                 }
             }

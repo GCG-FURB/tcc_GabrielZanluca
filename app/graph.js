@@ -32,12 +32,16 @@ cube.rotation.onUpdate = (deltaTime) => {
 }
 
 cubeChild.rotation.onUpdate = (deltaTime) => {
-    cubeChild.rotation.z = 1 * deltaTime;
+    cubeChild.rotation.z = 2 * deltaTime;
 }
 
 cubeChild2.rotation.onUpdate = (deltaTime) => {
-    cubeChild2.rotation.z = 3 * deltaTime;
+    cubeChild2.rotation.z = 2 * deltaTime;
 }
+
+// cubeChild.scale.x = cubeChild.scale.y = cubeChild.scale.z = 0.8;
+
+// cubeChild2.scale.x = cubeChild2.scale.y = cubeChild2.scale.z = 0.4;
 
 cubeChild.translate.y = 3
 
@@ -46,6 +50,16 @@ cubeChild2.translate.y = 3;
 cube.translate.y = 1;
 cube.translate.z = -5;
 cube.addGameOdbject(cubeChild);
+// cube.addGameOdbject(cubeChild2);
 cubeChild.addGameOdbject(cubeChild2);
 
 scene.addGameObject(cube);
+
+cube.render.colorVertex(0, yellow);
+cube.render.colorVertex(1, yellow);
+
+cubeChild.render.colorVertex(2, purple);
+cubeChild.render.colorVertex(3, purple);
+
+cubeChild2.render.colorVertex(2, red);
+cubeChild2.render.colorVertex(3, red);

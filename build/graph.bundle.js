@@ -9146,38 +9146,7 @@ var LogicSystem = exports.LogicSystem = function () {
                                     component.onUpdate(deltaTime);
                                 }
                             }
-
-                            var _iteratorNormalCompletion2 = true;
-                            var _didIteratorError2 = false;
-                            var _iteratorError2 = undefined;
-
-                            try {
-                                for (var _iterator2 = gameObject.child[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                                    var child = _step2.value;
-
-                                    if (child instanceof _GameObject.GameObject) {
-                                        for (var _index in child.listComponents) {
-                                            var _component = child.listComponents[_index];
-                                            if (_component instanceof _Component.Component) {
-                                                _component.onUpdate(deltaTime);
-                                            }
-                                        }
-                                    }
-                                }
-                            } catch (err) {
-                                _didIteratorError2 = true;
-                                _iteratorError2 = err;
-                            } finally {
-                                try {
-                                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                                        _iterator2.return();
-                                    }
-                                } finally {
-                                    if (_didIteratorError2) {
-                                        throw _iteratorError2;
-                                    }
-                                }
-                            }
+                            LogicSystem.updateChild(gameObject.child, deltaTime);
                         }
                     }
                 } catch (err) {
@@ -9192,6 +9161,40 @@ var LogicSystem = exports.LogicSystem = function () {
                         if (_didIteratorError) {
                             throw _iteratorError;
                         }
+                    }
+                }
+            }
+        }
+    }, {
+        key: "updateChild",
+        value: function updateChild(child, deltaTime) {
+            var _iteratorNormalCompletion2 = true;
+            var _didIteratorError2 = false;
+            var _iteratorError2 = undefined;
+
+            try {
+                for (var _iterator2 = child[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    var gameObject = _step2.value;
+
+                    for (var index in gameObject.listComponents) {
+                        var component = gameObject.listComponents[index];
+                        if (component instanceof _Component.Component) {
+                            component.onUpdate(deltaTime);
+                        }
+                    }
+                    LogicSystem.updateChild(gameObject.child, deltaTime);
+                }
+            } catch (err) {
+                _didIteratorError2 = true;
+                _iteratorError2 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                        _iterator2.return();
+                    }
+                } finally {
+                    if (_didIteratorError2) {
+                        throw _iteratorError2;
                     }
                 }
             }
@@ -9362,12 +9365,16 @@ cube.rotation.onUpdate = function (deltaTime) {
 };
 
 cubeChild.rotation.onUpdate = function (deltaTime) {
-    cubeChild.rotation.z = 1 * deltaTime;
+    cubeChild.rotation.z = 2 * deltaTime;
 };
 
 cubeChild2.rotation.onUpdate = function (deltaTime) {
-    cubeChild2.rotation.z = 3 * deltaTime;
+    cubeChild2.rotation.z = 2 * deltaTime;
 };
+
+// cubeChild.scale.x = cubeChild.scale.y = cubeChild.scale.z = 0.8;
+
+// cubeChild2.scale.x = cubeChild2.scale.y = cubeChild2.scale.z = 0.4;
 
 cubeChild.translate.y = 3;
 
@@ -9376,9 +9383,19 @@ cubeChild2.translate.y = 3;
 cube.translate.y = 1;
 cube.translate.z = -5;
 cube.addGameOdbject(cubeChild);
+// cube.addGameOdbject(cubeChild2);
 cubeChild.addGameOdbject(cubeChild2);
 
 scene.addGameObject(cube);
+
+cube.render.colorVertex(0, yellow);
+cube.render.colorVertex(1, yellow);
+
+cubeChild.render.colorVertex(2, purple);
+cubeChild.render.colorVertex(3, purple);
+
+cubeChild2.render.colorVertex(2, red);
+cubeChild2.render.colorVertex(3, red);
 
 /***/ })
 /******/ ]);
