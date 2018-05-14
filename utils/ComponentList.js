@@ -6,6 +6,7 @@ export class ComponentList extends Array {
         super();
         Object.setPrototypeOf(this, ComponentList.prototype);
     }
+    
     /**
      * 
      * 

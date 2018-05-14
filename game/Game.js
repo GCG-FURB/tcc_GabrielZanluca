@@ -1,13 +1,26 @@
-import {Scene} from "./Scene";
+import { Scene } from "./Scene";
 import { ComponentList } from "../utils/ComponentList";
 import { RenderSystem } from "../system/RenderSystem";
 import { mat4 } from "../libs/gl-matrix/gl-matrix";
 import { LogicSystem } from "../system/LogicSystem";
 
 let instace = undefined;
-
+/**
+ * 
+ * 
+ * @export
+ * @class Game
+ * @author Gabriel Zanluca
+ */
 export class Game {
-    constructor(context, scene, camera) {
+    /**
+     * Creates an instance of Game.
+     * @param {WebGLRenderingContext} context 
+     * @param {Scene} scene 
+     * @param {any} camera 
+     * @memberof Game
+     */
+    constructor(context = undefined, scene  = undefined, camera  = undefined) {
         if (!instace) {
             this.__context = context;
             this.__scene = scene;
@@ -24,15 +37,33 @@ export class Game {
         return instace;
     }
 
+    /**
+     * @return {WebGLRenderingContext}
+     * 
+     * @readonly
+     * @memberof Game
+     */
     get context() {
         return this.__context;
     }
 
+    /**
+     * 
+     *@return {Scene} 
+     * @readonly
+     * @memberof Game
+     */
     get scene() {
         return this.__scene;
     }
 
-    get projection(){
+    /**
+     * 
+     *@returns {number[]} 
+     * @readonly
+     * @memberof Game
+     */
+    get projection() {
         return this.__projection;
     }
 
@@ -42,10 +73,10 @@ export class Game {
 
     startGameLoop() {
         let Loop = () => {
-            this.__requestAnimFrame = window.requestAnimationFrame (Loop);
+            this.__requestAnimFrame = window.requestAnimationFrame(Loop);
             this.gameLoop();
         };
-        
+
         Loop();
     }
 
@@ -59,17 +90,23 @@ export class Game {
     gameLoop() {
         let deltaTime = (Date.now() - this.__lastUpdateTime) / 1000;
         //if (this.__paused) {
-            this.updateGame(deltaTime);
-            this.renderGame();
+        this.updateGame(deltaTime);
+        this.renderGame();
         //}
         this.__lastUpdateTime = Date.now();
     }
 
+    /**
+     * 
+     * 
+     * @param {number} deltaTime 
+     * @memberof Game
+     */
     updateGame(deltaTime) {
         LogicSystem.fireUpdateListener(deltaTime);
     }
 
-    renderGame(){
+    renderGame() {
         RenderSystem.fireRenderListener();
     }
 }

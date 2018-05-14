@@ -1,28 +1,108 @@
+import { GameObject } from "../gameObject/GameObject";
+import { Light } from "../Light/Light";
 
+/**
+ * 
+ * 
+ * @export
+ * @class Scene
+ * @author Gabriel Zanluca
+ */
 export class Scene {
+    /**
+     * Creates an instance of Scene.
+     * @memberof Scene
+     */
     constructor() {
         this.__gameObjectList = new Array();
         this.__lights = new Array();
     }
 
+    /**
+     * 
+     * 
+     * @readonly
+     * @memberof Scene
+     * @returns {GameObject[]} 
+     */
     get gameObjectList() {
         return this.__gameObjectList;
     }
 
-    get lights(){
+    /**
+     * 
+     * 
+     * @readonly
+     * @memberof Scene
+     * @returns {Light[]}
+     */
+    get lights() {
         return this.__lights;
     }
 
-    addLight(light){
+    /**
+     * 
+     * 
+     * @param {Light} light 
+     * @memberof Scene
+     */
+    addLight(light) {
         this.__lights.push(light);
         for (let index = 0; index < this.__gameObjectList.length; index++) {
             const object = this.__gameObjectList[index];
-            object.onLoad();            
+            object.onLoad();
         }
     }
 
-    get ligthsInfo(){
-        let positionsVector =  [], colorVector =  [], typesVector =  [];
+    /**
+     * 
+     * 
+     * @param {Light} light 
+     * @memberof Scene
+     */
+    removeLight(light) {
+        let index = this.__lights.findIndex(l => l == light);
+        this.__lights.splice(index, 1);
+        for (let index = 0; index < this.__gameObjectList.length; index++) {
+            const object = this.__gameObjectList[index];
+            object.onLoad();
+        }
+    }
+
+    /**
+     * 
+     * 
+     * @param {GameObject} gameObject 
+     * @memberof Scene
+     */
+    addGameObject(gameObject) {
+        this.__gameObjectList.push(gameObject);
+        for (let componentKey in gameObject.listComponents) {
+            let component = gameObject.listComponents[componentKey];
+            component.onLoad();
+        }
+    }
+
+    /**
+     * 
+     * 
+     * @param {GameObject} gameObject 
+     * @memberof Scene
+     */
+    removeGameObject(gameObject) {
+        let index = this.__gameObjectList.findIndex(g => g == gameObject);
+
+        this.__gameObjectList.splice(index, 1);
+    }
+
+    /**
+     * 
+     * 
+     * @returns {Object}
+     * @memberof Scene
+     */
+    get ligthsInfo() {
+        let positionsVector = [], colorVector = [], typesVector = [];
         let secondColorVector = [], shininessVector = [], lookAtVector = [];
         let lowLimmitVector = [], highLimmitVector = [];
 
@@ -38,22 +118,14 @@ export class Scene {
         });
 
         return {
-            positions : positionsVector,
-            colors : colorVector,
-            types : typesVector,
-            shininess : shininessVector,
-            secondColor : secondColorVector,
-            lookAt : lookAtVector,
-            lowLimmit : lowLimmitVector,
-            highLimmit : highLimmitVector
-        }
-    }
-
-    addGameObject(gameObject){
-        this.__gameObjectList.push(gameObject);
-        for (let componentKey in gameObject.listComponents) {
-                let component = gameObject.listComponents[componentKey];
-                component.onLoad();
+            positions: positionsVector,
+            colors: colorVector,
+            types: typesVector,
+            shininess: shininessVector,
+            secondColor: secondColorVector,
+            lookAt: lookAtVector,
+            lowLimmit: lowLimmitVector,
+            highLimmit: highLimmitVector
         }
     }
 }

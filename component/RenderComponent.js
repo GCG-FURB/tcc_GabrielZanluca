@@ -89,12 +89,6 @@ export class RenderComponent extends Component {
             this.__lightCode += "  float inLight = clamp((dotFromDirection - uOuterLimit[i]) / limitRange, 0.0, 1.0); ";
             this.__lightCode += "  float specular = inLight * pow(dot(transformedNormal.xyz, halfVector), uShininess[i]); ";
             this.__lightCode += "  highp float light = inLight * max(dot(transformedNormal.xyz, surfaceToLightDirection), 0.0); ";
-            // this.__lightCode += "  if (dotFromDirection >= uLimit[i]) { "
-            // this.__lightCode += "  light = max(dot(transformedNormal.xyz, surfaceToLightDirection), 0.0);  "
-            // this.__lightCode += "   if (light > 0.0) { ";
-            // this.__lightCode += "     specular = pow(dot(transformedNormal.xyz, halfVector), uShininess[i]);"
-            // this.__lightCode += "   } ";
-            // this.__lightCode += "  } ";
             this.__lightCode += "  vColor.rgb += specular * uLightColor2[i]; ";
             this.__lightCode += "  reflectedLightColor += light * directionalLightColor; ";
             this.__lightCode += " }"

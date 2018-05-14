@@ -24,6 +24,7 @@ let purple = new Color({b : 1, r: 1});
 let cube = new CubeGameObject({color : red});
 let cubeChild = new CubeGameObject({color : blue});
 let cubeChild2 = new CubeGameObject({color : green});
+let cubeChild3 = new CubeGameObject({color : purple});
 
 // cube.rotation.z = (Math.PI/180) * 40;
 
@@ -31,15 +32,15 @@ cube.rotation.onUpdate = (deltaTime) => {
     cube.rotation.z = 2 * deltaTime;
 }
 
-cubeChild.rotation.onUpdate = (deltaTime) => {
-    cubeChild.rotation.z = 2 * deltaTime;
-}
+// cubeChild.rotation.onUpdate = (deltaTime) => {
+//     cubeChild.rotation.z = 2 * deltaTime;
+// }
 
-cubeChild2.rotation.onUpdate = (deltaTime) => {
-    cubeChild2.rotation.z = 2 * deltaTime;
-}
+// cubeChild2.rotation.onUpdate = (deltaTime) => {
+//     cubeChild2.rotation.z = 2 * deltaTime;
+// }
 
-// cubeChild.scale.x = cubeChild.scale.y = cubeChild.scale.z = 0.8;
+cubeChild.scale.x = cubeChild.scale.y = cubeChild.scale.z = 0.8;
 
 // cubeChild2.scale.x = cubeChild2.scale.y = cubeChild2.scale.z = 0.4;
 
@@ -47,11 +48,13 @@ cubeChild.translate.y = 3
 
 cubeChild2.translate.y = 3;
 
+cubeChild3.translate.y = 3;
+
 cube.translate.y = 1;
 cube.translate.z = -5;
 cube.addGameOdbject(cubeChild);
-// cube.addGameOdbject(cubeChild2);
-cubeChild.addGameOdbject(cubeChild2);
+cube.addGameOdbject(cubeChild2);
+cubeChild.addGameOdbject(cubeChild3);
 
 scene.addGameObject(cube);
 

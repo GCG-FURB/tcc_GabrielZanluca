@@ -1,108 +1,15 @@
 import { RenderComponent } from "./RenderComponent";
-import { JSUtils } from "../utils/JSUtils";
 import { Game } from "../game/Game";
-import { mat4, vec3, mat3 } from "../libs/gl-matrix/gl-matrix";
-import { TranslateComponent } from "./TranslateComponent";
-import { RotateComponent } from "./RotateComponent";
-import { ScaleComponent } from "./ScaleComponent";
-import { Color } from "../geometric/Color";
-import { GameObject } from "../gameObject/GameObject";
-import { CubeGameObject } from "../gameObject/CubeGameObject";
-import { Point3D } from "../geometric/Point3D";
+import { JSUtils } from "../utils/JSUtils";
+import { mat4 } from "../libs/gl-matrix/gl-matrix";
 
-// position of each face of the cube
-const vertices = [
-    // Front face
-    -1.0, -1.0, 1.0,
-    1.0, -1.0, 1.0,
-    1.0, 1.0, 1.0,
-    -1.0, 1.0, 1.0,
+export class SphereRenderComponent extends RenderComponent {
 
-    // Back face
-    -1.0, -1.0, -1.0,
-    -1.0, 1.0, -1.0,
-    1.0, 1.0, -1.0,
-    1.0, -1.0, -1.0,
-
-    // Top face
-    -1.0, 1.0, -1.0,
-    -1.0, 1.0, 1.0,
-    1.0, 1.0, 1.0,
-    1.0, 1.0, -1.0,
-
-    // Bottom face
-    -1.0, -1.0, -1.0,
-    1.0, -1.0, -1.0,
-    1.0, -1.0, 1.0,
-    -1.0, -1.0, 1.0,
-
-    // Right face
-    1.0, -1.0, -1.0,
-    1.0, 1.0, -1.0,
-    1.0, 1.0, 1.0,
-    1.0, -1.0, 1.0,
-
-    // Left face
-    -1.0, -1.0, -1.0,
-    -1.0, -1.0, 1.0,
-    -1.0, 1.0, 1.0,
-    -1.0, 1.0, -1.0,
-];
-
-const indices = [
-    0, 1, 2, 0, 2, 3,    // front
-    4, 5, 6, 4, 6, 7,    // back
-    8, 9, 10, 8, 10, 11,   // top
-    12, 13, 14, 12, 14, 15,   // bottom
-    16, 17, 18, 16, 18, 19,   // right
-    20, 21, 22, 20, 22, 23,   // left
-];
-
-const vertexNormals = [
-    // Front
-    0.0, 0.0, 1.0,
-    0.0, 0.0, 1.0,
-    0.0, 0.0, 1.0,
-    0.0, 0.0, 1.0,
-
-    // Back
-    0.0, 0.0, -1.0,
-    0.0, 0.0, -1.0,
-    0.0, 0.0, -1.0,
-    0.0, 0.0, -1.0,
-
-    // Top
-    0.0, 1.0, 0.0,
-    0.0, 1.0, 0.0,
-    0.0, 1.0, 0.0,
-    0.0, 1.0, 0.0,
-
-    // Bottom
-    0.0, -1.0, 0.0,
-    0.0, -1.0, 0.0,
-    0.0, -1.0, 0.0,
-    0.0, -1.0, 0.0,
-
-    // Right
-    1.0, 0.0, 0.0,
-    1.0, 0.0, 0.0,
-    1.0, 0.0, 0.0,
-    1.0, 0.0, 0.0,
-
-    // Left
-    -1.0, 0.0, 0.0,
-    -1.0, 0.0, 0.0,
-    -1.0, 0.0, 0.0,
-    -1.0, 0.0, 0.0
-];
-
-export class CubeRenderComponent extends RenderComponent {
-
-    constructor({ owner }) {
-        super({ owner: owner });
+    constructor({owner}) {
+        super({owner :  owner});
         this.__indexBuffer = undefined;
-        this.__numberOfFace = 6;
-        this.__numberOfVertexPerFace = 4
+        this.__numberOfFace = 31;
+        this.__numberOfVertexPerFace = 31;
         this.__normalMatrix = undefined;
         this.__lightPosition = undefined;
         this.__lightColor = undefined;
@@ -112,6 +19,12 @@ export class CubeRenderComponent extends RenderComponent {
         this.__lightDirection = undefined;
         this.__innerLimit = undefined;
         this.__outerLimit = undefined;
+        this.__radius = 2;
+        this.__latitudeBands = 30;
+        this.__longitudeBands = 30;
+        this.__vertexPositionData = [];
+        this.__normalData = [];
+        this.__indexData = [];
     }
 
     vertexShaderSource() {
@@ -133,11 +46,12 @@ export class CubeRenderComponent extends RenderComponent {
           gl_Position = uProjectionMatrix * uCameraMatrix * uModelViewMatrix * aVertexPosition;
           reflectedLightColor = vec3(1.0,1.0,1.0);
           vColor = aVertexColor;`
-            + this.__lightCode +
-            `}`;
+          + this.__lightCode +
+         `}`;
     };
-    //u_projection * u_camera * u_transform * 
-    fragmentShaderSource() {
+
+
+    fragmentShaderSource(){
         return `varying lowp vec4 vColor;
 
         varying highp vec3 reflectedLightColor;
@@ -149,30 +63,71 @@ export class CubeRenderComponent extends RenderComponent {
         }`;
     };
 
-    onLoad() {
+    onLoad(){
         super.onLoad();
-
+        
         let game = new Game();
         let gl = game.context;
 
-        if (this.__program) {
+        if (this.__program){
             gl.deleteProgram(this.__program);
         }
-
-        // console.log(gl.getShaderSource(this.vertexShader));
-
         this.__program = JSUtils.createProgram(this.vertexShader, this.fragmentShader);
-        // console.log(gl.getAttribLocation(this.__program, "aVertexNormal"));
+
         this.__positionAttributeLocation = gl.getAttribLocation(this.__program, "aVertexPosition");
         this.__positionBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, this.__positionBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
 
+        this.__vertexPositionData = [];
+        this.__normalData = [];
+
+        for (let latNumber = 0; latNumber <= this.__latitudeBands; latNumber++) {
+            let theta = latNumber * Math.PI / this.__latitudeBands;
+            let sinTheta = Math.sin(theta);
+            let cosTheta = Math.cos(theta);
+            
+            for (let longNumber = 0; longNumber <= this.__longitudeBands; longNumber++){
+                let phi = longNumber * 2 * Math.PI/ this.__longitudeBands;
+                let sinPhi = Math.sin(phi);
+                let cosPhi = Math.cos(phi);
+
+                let x = cosPhi * sinTheta;
+                let y = cosTheta;
+                let z = sinPhi * sinTheta;
+
+                this.__normalData.push(x);
+                this.__normalData.push(y);
+                this.__normalData.push(z);
+
+                this.__vertexPositionData.push(this.__radius * x);
+                this.__vertexPositionData.push(this.__radius * y);
+                this.__vertexPositionData.push(this.__radius * z);
+                //this.__vertexPositionData.push(1.0);
+            }
+   
+        }
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.__vertexPositionData), gl.STATIC_DRAW);
         this.__vertexNomralAttribute = 2;
+
+        this.__indexData = [];
+        for (let latNumber = 0; latNumber < this.__latitudeBands; latNumber++) {
+            for (let longNumber = 0; longNumber < this.__longitudeBands; longNumber++) {
+                let first = (latNumber * (this.__longitudeBands + 1)) + longNumber   
+                let second = first + this.__longitudeBands + 1;
+                this.__indexData.push(first);
+                this.__indexData.push(second);
+
+                this.__indexData.push(first + 1);
+
+                this.__indexData.push(second);
+                this.__indexData.push(second + 1);
+                this.__indexData.push(first + 1);
+            }                
+        }
 
         this.__indexBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer);
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.__indexData), gl.STATIC_DRAW);
 
         this.__modelViewMatrix = gl.getUniformLocation(this.__program, 'uModelViewMatrix');
 
@@ -181,15 +136,15 @@ export class CubeRenderComponent extends RenderComponent {
         this.__cameraMatrix = gl.getUniformLocation(this.__program, 'uCameraMatrix');
 
 
-        this.__normalBuffer = gl.createBuffer();
+        this.__normalBuffer =  gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, this.__normalBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexNormals), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.__normalData), gl.STATIC_DRAW);
 
         this.__normalMatrix = gl.getUniformLocation(this.__program, 'uNormalMatrix');
 
         this.__cameraPosAttributeLocation = gl.getUniformLocation(this.__program, 'u_viewWorldPosition');;
 
-        if (game.scene.lights.length > 0) {
+        if (game.scene.lights.length > 0){
             this.__lightColor = gl.getUniformLocation(this.__program, 'uLightColor');
             this.__lightColor2 = gl.getUniformLocation(this.__program, 'uLightColor2');
             this.__lightPosition = gl.getUniformLocation(this.__program, 'uLightPosition');
@@ -199,8 +154,7 @@ export class CubeRenderComponent extends RenderComponent {
             this.__innerLimit = gl.getUniformLocation(this.__program, 'uInnerLimit');
             this.__outerLimit = gl.getUniformLocation(this.__program, 'uOuterLimit');
             //console.log(gl.getShaderSource(this.vertexShader));
-        }
-
+        }         
     }
 
     onRender(context, projctionMareix) {
@@ -286,7 +240,7 @@ export class CubeRenderComponent extends RenderComponent {
 
         {
             let offset = 0;
-            let vertexCount = 36;
+            let vertexCount = this.__indexData.length;
             let type = context.UNSIGNED_SHORT;
             context.drawElements(context.TRIANGLES, vertexCount, type, offset);
         }
@@ -295,10 +249,10 @@ export class CubeRenderComponent extends RenderComponent {
     }
 
     get tag() {
-        return CubeRenderComponent.tag;
+        return SphereRenderComponent.tag;
     }
 
     static get tag() {
-        return "CUBE_RENDER_COMPONENT"
+        return "SPHERE_RENDER_COMPONENT"
     }
 }
