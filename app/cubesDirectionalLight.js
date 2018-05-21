@@ -28,8 +28,10 @@ let cube2 = new CubeGameObject({color : blue});
 let cube3 = new CubeGameObject({color : green});
 
 let directLight = new DirectionalLight({color : white, position : new Point3D(2, 8, 5)});
+let directLight2 = new DirectionalLight({color : white, position : new Point3D(-2, -8, -5)});
 
 scene.addLight(directLight);
+scene.addLight(directLight2);
 
 cube.rotation.onUpdate = (deltaTime) => {
     cube.rotation.z = 2 * deltaTime;

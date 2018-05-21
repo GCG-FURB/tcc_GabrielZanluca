@@ -50,7 +50,7 @@ export class Scene {
         this.__lights.push(light);
         for (let index = 0; index < this.__gameObjectList.length; index++) {
             const object = this.__gameObjectList[index];
-            object.onLoad();
+            object.render.onLoad();
         }
     }
 
@@ -65,7 +65,7 @@ export class Scene {
         this.__lights.splice(index, 1);
         for (let index = 0; index < this.__gameObjectList.length; index++) {
             const object = this.__gameObjectList[index];
-            object.onLoad();
+            object.render.onLoad();
         }
     }
 

@@ -1477,14 +1477,14 @@ var RenderComponent = exports.RenderComponent = function (_Component) {
                 this.__lightCode += "  highp vec3 directionalLightColor = uLightColor[i]; ";
                 this.__lightCode += "  highp vec3 surfaceWorldPosition = (uModelViewMatrix * aVertexPosition).xyz; ";
                 this.__lightCode += "  highp vec3 v_surfaceToLight = uLightPosition[i] - surfaceWorldPosition; ";
-                this.__lightCode += "  highp vec4 transformedNormal = uNormalMatrix * vec4(aVertexNormal, 0.0); ";
+                this.__lightCode += "  highp vec4 transformedNormal = uNormalMatrix * vec4(aVertexNormal, 1.0); ";
                 // this.__lightCode += "  highp vec3 u_viewWorldPosition = vec3(-0.21, 5.54, 7.09); "
                 this.__lightCode += "  highp vec3 surfaceToLightDirection = normalize(v_surfaceToLight); ";
                 this.__lightCode += "  highp vec3 v_surfaceToView = u_viewWorldPosition - surfaceWorldPosition; ";
                 this.__lightCode += "  highp vec3 surfaceToViewDirection = normalize(v_surfaceToView); ";
                 this.__lightCode += "  highp vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection); ";
                 this.__lightCode += "  float specular = 0.0; ";
-                this.__lightCode += "  highp float light = max(dot(transformedNormal.xyz, surfaceToLightDirection), 0.0); ";
+                this.__lightCode += "  highp float light = max(dot(transformedNormal.xyz, surfaceToLightDirection), 1.0); ";
                 this.__lightCode += "  if (light > 0.0) { ";
                 this.__lightCode += "    specular = pow(dot(transformedNormal.xyz, halfVector), uShininess[i]);";
                 this.__lightCode += "  } ";
@@ -4429,7 +4429,7 @@ var Scene = exports.Scene = function () {
             this.__lights.push(light);
             for (var index = 0; index < this.__gameObjectList.length; index++) {
                 var object = this.__gameObjectList[index];
-                object.onLoad();
+                object.render.onLoad();
             }
         }
 
@@ -4449,7 +4449,7 @@ var Scene = exports.Scene = function () {
             this.__lights.splice(index, 1);
             for (var _index = 0; _index < this.__gameObjectList.length; _index++) {
                 var object = this.__gameObjectList[_index];
-                object.onLoad();
+                object.render.onLoad();
             }
         }
 

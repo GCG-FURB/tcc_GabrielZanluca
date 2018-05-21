@@ -1477,14 +1477,14 @@ var RenderComponent = exports.RenderComponent = function (_Component) {
                 this.__lightCode += "  highp vec3 directionalLightColor = uLightColor[i]; ";
                 this.__lightCode += "  highp vec3 surfaceWorldPosition = (uModelViewMatrix * aVertexPosition).xyz; ";
                 this.__lightCode += "  highp vec3 v_surfaceToLight = uLightPosition[i] - surfaceWorldPosition; ";
-                this.__lightCode += "  highp vec4 transformedNormal = uNormalMatrix * vec4(aVertexNormal, 0.0); ";
+                this.__lightCode += "  highp vec4 transformedNormal = uNormalMatrix * vec4(aVertexNormal, 1.0); ";
                 // this.__lightCode += "  highp vec3 u_viewWorldPosition = vec3(-0.21, 5.54, 7.09); "
                 this.__lightCode += "  highp vec3 surfaceToLightDirection = normalize(v_surfaceToLight); ";
                 this.__lightCode += "  highp vec3 v_surfaceToView = u_viewWorldPosition - surfaceWorldPosition; ";
                 this.__lightCode += "  highp vec3 surfaceToViewDirection = normalize(v_surfaceToView); ";
                 this.__lightCode += "  highp vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection); ";
                 this.__lightCode += "  float specular = 0.0; ";
-                this.__lightCode += "  highp float light = max(dot(transformedNormal.xyz, surfaceToLightDirection), 0.0); ";
+                this.__lightCode += "  highp float light = max(dot(transformedNormal.xyz, surfaceToLightDirection), 1.0); ";
                 this.__lightCode += "  if (light > 0.0) { ";
                 this.__lightCode += "    specular = pow(dot(transformedNormal.xyz, halfVector), uShininess[i]);";
                 this.__lightCode += "  } ";
@@ -4429,7 +4429,7 @@ var Scene = exports.Scene = function () {
             this.__lights.push(light);
             for (var index = 0; index < this.__gameObjectList.length; index++) {
                 var object = this.__gameObjectList[index];
-                object.onLoad();
+                object.render.onLoad();
             }
         }
 
@@ -4449,7 +4449,7 @@ var Scene = exports.Scene = function () {
             this.__lights.splice(index, 1);
             for (var _index = 0; _index < this.__gameObjectList.length; _index++) {
                 var object = this.__gameObjectList[_index];
-                object.onLoad();
+                object.render.onLoad();
             }
         }
 
@@ -9925,6 +9925,193 @@ var OrthogonalCamera = exports.OrthogonalCamera = function () {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.DirectionalLight = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Color = __webpack_require__(6);
+
+var _Point3D = __webpack_require__(5);
+
+var _Light2 = __webpack_require__(21);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * 
+ * 
+ * @export
+ * @class DirectionalLight
+ * @author Gabriel Zanluca
+ * @extends {Light}
+ */
+var DirectionalLight = exports.DirectionalLight = function (_Light) {
+    _inherits(DirectionalLight, _Light);
+
+    function DirectionalLight(_ref) {
+        var _ref$color = _ref.color,
+            color = _ref$color === undefined ? new _Color.Color({ r: 0, b: 0, g: 0 }) : _ref$color,
+            _ref$position = _ref.position,
+            position = _ref$position === undefined ? new _Point3D.Point3D(0, 0, 0) : _ref$position;
+
+        _classCallCheck(this, DirectionalLight);
+
+        return _possibleConstructorReturn(this, (DirectionalLight.__proto__ || Object.getPrototypeOf(DirectionalLight)).call(this, { color: color, position: position }));
+    }
+
+    _createClass(DirectionalLight, [{
+        key: "type",
+        get: function get() {
+            return DirectionalLight.type();
+        }
+    }], [{
+        key: "type",
+        value: function type() {
+            return 0;
+        }
+    }]);
+
+    return DirectionalLight;
+}(_Light2.Light);
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.PointLight = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Color = __webpack_require__(6);
+
+var _Point3D = __webpack_require__(5);
+
+var _Light2 = __webpack_require__(21);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * 
+ * 
+ * @export
+ * @class PointLight
+ * @author Gabriel Zanluca
+ * @extends {Light}
+ */
+var PointLight = exports.PointLight = function (_Light) {
+    _inherits(PointLight, _Light);
+
+    function PointLight(_ref) {
+        var _ref$color = _ref.color,
+            color = _ref$color === undefined ? new _Color.Color({ r: 1, b: 1, g: 1 }) : _ref$color,
+            _ref$position = _ref.position,
+            position = _ref$position === undefined ? new _Point3D.Point3D(0, 0, 0) : _ref$position,
+            _ref$shininess = _ref.shininess,
+            shininess = _ref$shininess === undefined ? 1 : _ref$shininess,
+            _ref$secondColor = _ref.secondColor,
+            secondColor = _ref$secondColor === undefined ? new _Color.Color({ r: 1, g: 1, b: 1 }) : _ref$secondColor;
+
+        _classCallCheck(this, PointLight);
+
+        var _this = _possibleConstructorReturn(this, (PointLight.__proto__ || Object.getPrototypeOf(PointLight)).call(this, { color: color, position: position }));
+
+        _this.__shininess = shininess;
+        _this.__secondColor = secondColor;
+        return _this;
+    }
+
+    _createClass(PointLight, [{
+        key: "type",
+        get: function get() {
+            return PointLight.type();
+        }
+
+        /**
+         * @param {number} shininess
+         * 
+         * @memberof PointLight
+         */
+
+    }, {
+        key: "shininess",
+        set: function set(shininess) {
+            this.__shininess = shininess;
+        }
+
+        /**
+         * @returns {number}
+         * 
+         * @memberof PointLight
+         */
+        ,
+        get: function get() {
+            return this.__shininess;
+        }
+
+        /**
+         * @param {Color} secondColor
+         * 
+         * @memberof PointLight
+         */
+
+    }, {
+        key: "secondColor",
+        set: function set(secondColor) {
+            this.__secondColor = secondColor;
+        }
+
+        /**
+         * @returns {Color}
+         * 
+         * @memberof PointLight
+         */
+        ,
+        get: function get() {
+            return this.__secondColor;
+        }
+
+        /**
+         * 
+         * 
+         * @static
+         * @returns {number}
+         * @memberof PointLight
+         */
+
+    }], [{
+        key: "type",
+        value: function type() {
+            return 1;
+        }
+    }]);
+
+    return PointLight;
+}(_Light2.Light);
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 exports.SpotLight = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -10030,7 +10217,7 @@ var SpotLight = exports.SpotLight = function (_Light) {
 }(_Light2.Light);
 
 /***/ }),
-/* 34 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10045,7 +10232,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _GameObject2 = __webpack_require__(1);
 
-var _TriangleRenderComponent = __webpack_require__(35);
+var _TriangleRenderComponent = __webpack_require__(37);
 
 var _Game = __webpack_require__(4);
 
@@ -10100,7 +10287,7 @@ var TriangleGameObject = exports.TriangleGameObject = function (_GameObject) {
 }(_GameObject2.GameObject);
 
 /***/ }),
-/* 35 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10236,193 +10423,6 @@ var TriangleRenderComponent = exports.TriangleRenderComponent = function (_Rende
 }(_RenderComponent2.RenderComponent);
 
 /***/ }),
-/* 36 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.DirectionalLight = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _Color = __webpack_require__(6);
-
-var _Point3D = __webpack_require__(5);
-
-var _Light2 = __webpack_require__(21);
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-/**
- * 
- * 
- * @export
- * @class DirectionalLight
- * @author Gabriel Zanluca
- * @extends {Light}
- */
-var DirectionalLight = exports.DirectionalLight = function (_Light) {
-    _inherits(DirectionalLight, _Light);
-
-    function DirectionalLight(_ref) {
-        var _ref$color = _ref.color,
-            color = _ref$color === undefined ? new _Color.Color({ r: 0, b: 0, g: 0 }) : _ref$color,
-            _ref$position = _ref.position,
-            position = _ref$position === undefined ? new _Point3D.Point3D(0, 0, 0) : _ref$position;
-
-        _classCallCheck(this, DirectionalLight);
-
-        return _possibleConstructorReturn(this, (DirectionalLight.__proto__ || Object.getPrototypeOf(DirectionalLight)).call(this, { color: color, position: position }));
-    }
-
-    _createClass(DirectionalLight, [{
-        key: "type",
-        get: function get() {
-            return DirectionalLight.type();
-        }
-    }], [{
-        key: "type",
-        value: function type() {
-            return 0;
-        }
-    }]);
-
-    return DirectionalLight;
-}(_Light2.Light);
-
-/***/ }),
-/* 37 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.PointLight = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _Color = __webpack_require__(6);
-
-var _Point3D = __webpack_require__(5);
-
-var _Light2 = __webpack_require__(21);
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-/**
- * 
- * 
- * @export
- * @class PointLight
- * @author Gabriel Zanluca
- * @extends {Light}
- */
-var PointLight = exports.PointLight = function (_Light) {
-    _inherits(PointLight, _Light);
-
-    function PointLight(_ref) {
-        var _ref$color = _ref.color,
-            color = _ref$color === undefined ? new _Color.Color({ r: 1, b: 1, g: 1 }) : _ref$color,
-            _ref$position = _ref.position,
-            position = _ref$position === undefined ? new _Point3D.Point3D(0, 0, 0) : _ref$position,
-            _ref$shininess = _ref.shininess,
-            shininess = _ref$shininess === undefined ? 1 : _ref$shininess,
-            _ref$secondColor = _ref.secondColor,
-            secondColor = _ref$secondColor === undefined ? new _Color.Color({ r: 1, g: 1, b: 1 }) : _ref$secondColor;
-
-        _classCallCheck(this, PointLight);
-
-        var _this = _possibleConstructorReturn(this, (PointLight.__proto__ || Object.getPrototypeOf(PointLight)).call(this, { color: color, position: position }));
-
-        _this.__shininess = shininess;
-        _this.__secondColor = secondColor;
-        return _this;
-    }
-
-    _createClass(PointLight, [{
-        key: "type",
-        get: function get() {
-            return PointLight.type();
-        }
-
-        /**
-         * @param {number} shininess
-         * 
-         * @memberof PointLight
-         */
-
-    }, {
-        key: "shininess",
-        set: function set(shininess) {
-            this.__shininess = shininess;
-        }
-
-        /**
-         * @returns {number}
-         * 
-         * @memberof PointLight
-         */
-        ,
-        get: function get() {
-            return this.__shininess;
-        }
-
-        /**
-         * @param {Color} secondColor
-         * 
-         * @memberof PointLight
-         */
-
-    }, {
-        key: "secondColor",
-        set: function set(secondColor) {
-            this.__secondColor = secondColor;
-        }
-
-        /**
-         * @returns {Color}
-         * 
-         * @memberof PointLight
-         */
-        ,
-        get: function get() {
-            return this.__secondColor;
-        }
-
-        /**
-         * 
-         * 
-         * @static
-         * @returns {number}
-         * @memberof PointLight
-         */
-
-    }], [{
-        key: "type",
-        value: function type() {
-            return 1;
-        }
-    }]);
-
-    return PointLight;
-}(_Light2.Light);
-
-/***/ }),
 /* 38 */,
 /* 39 */,
 /* 40 */,
@@ -10436,7 +10436,7 @@ var _Scene = __webpack_require__(19);
 
 var _Game = __webpack_require__(4);
 
-var _TriangleGameObject = __webpack_require__(34);
+var _TriangleGameObject = __webpack_require__(36);
 
 var _Color = __webpack_require__(6);
 
@@ -10466,11 +10466,11 @@ var _Point3D = __webpack_require__(5);
 
 var _PerspectiveCamera = __webpack_require__(31);
 
-var _DirectionalLight = __webpack_require__(36);
+var _DirectionalLight = __webpack_require__(33);
 
-var _PointLight = __webpack_require__(37);
+var _PointLight = __webpack_require__(34);
 
-var _SpotLight = __webpack_require__(33);
+var _SpotLight = __webpack_require__(35);
 
 function printMatrix(matrix) {
 

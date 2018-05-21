@@ -53,33 +53,33 @@ export class RenderComponent extends Component {
             this.__lightCode += " if (uLightType[i] == 0) { ";
             this.__lightCode += "  highp vec3 directionalLightColor = uLightColor[i]; "
             this.__lightCode += "  highp vec3 directionalVector = normalize(uLightPosition[i]); ";
-            this.__lightCode += "  highp vec4 transformedNormal = uNormalMatrix * vec4(aVertexNormal, 1.0); ";
-            this.__lightCode += "  highp float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0); "
+            this.__lightCode += "  highp vec3 transformedNormal = mat3(uNormalMatrix) * aVertexNormal; ";
+            this.__lightCode += "  highp float directional = max(dot(transformedNormal, directionalVector), 0.0); "
             this.__lightCode += "  reflectedLightColor += (directionalLightColor * directional); ";
             this.__lightCode += " } else ";
             this.__lightCode += " if (uLightType[i] == 1) {";
             this.__lightCode += "  highp vec3 directionalLightColor = uLightColor[i]; "
             this.__lightCode += "  highp vec3 surfaceWorldPosition = (uModelViewMatrix * aVertexPosition).xyz; "
             this.__lightCode += "  highp vec3 v_surfaceToLight = uLightPosition[i] - surfaceWorldPosition; "
-            this.__lightCode += "  highp vec4 transformedNormal = uNormalMatrix * vec4(aVertexNormal, 0.0); ";
+            this.__lightCode += "  highp vec3 transformedNormal = mat3(uNormalMatrix) * aVertexNormal; ";
             // this.__lightCode += "  highp vec3 u_viewWorldPosition = vec3(-0.21, 5.54, 7.09); "
             this.__lightCode += "  highp vec3 surfaceToLightDirection = normalize(v_surfaceToLight); ";
             this.__lightCode += "  highp vec3 v_surfaceToView = u_viewWorldPosition - surfaceWorldPosition; ";
             this.__lightCode += "  highp vec3 surfaceToViewDirection = normalize(v_surfaceToView); ";
             this.__lightCode += "  highp vec3 halfVector = normalize(surfaceToLightDirection + surfaceToViewDirection); ";
             this.__lightCode += "  float specular = 0.0; ";
-            this.__lightCode += "  highp float light = max(dot(transformedNormal.xyz, surfaceToLightDirection), 0.0); "
+            this.__lightCode += "  highp float light = max(dot(transformedNormal, surfaceToLightDirection), 0.0); "
             this.__lightCode += "  if (light > 0.0) { ";
-            this.__lightCode += "    specular = pow(dot(transformedNormal.xyz, halfVector), uShininess[i]);"
+            this.__lightCode += "    specular = pow(dot(transformedNormal, halfVector), uShininess[i]);"
             this.__lightCode += "  } ";
             this.__lightCode += "  vColor.rgb += specular * uLightColor2[i]; ";
-            this.__lightCode += "  reflectedLightColor += light * directionalLightColor; ";
+            this.__lightCode += "  reflectedLightColor += light; ";
             this.__lightCode += " } else ";
             this.__lightCode += " if (uLightType[i] == 2) { ";
             this.__lightCode += "  highp vec3 directionalLightColor = uLightColor[i]; "
             this.__lightCode += "  highp vec3 surfaceWorldPosition = (uModelViewMatrix * aVertexPosition).xyz; "
             this.__lightCode += "  highp vec3 v_surfaceToLight = uLightPosition[i] - surfaceWorldPosition; "
-            this.__lightCode += "  highp vec4 transformedNormal = uNormalMatrix * vec4(aVertexNormal, 0.0); ";
+            this.__lightCode += "  highp vec3 transformedNormal = mat3(uNormalMatrix) * aVertexNormal; ";
             this.__lightCode += "  highp vec3 surfaceToLightDirection = normalize(v_surfaceToLight); ";
             this.__lightCode += "  highp vec3 v_surfaceToView = u_viewWorldPosition - surfaceWorldPosition; ";
             this.__lightCode += "  highp vec3 surfaceToViewDirection = normalize(v_surfaceToView); ";
@@ -87,10 +87,10 @@ export class RenderComponent extends Component {
             this.__lightCode += "  float dotFromDirection = dot(surfaceToLightDirection, - uLightDirection[i]); ";
             this.__lightCode += "  float limitRange = uInnerLimit[i] - uOuterLimit[i]; ";
             this.__lightCode += "  float inLight = clamp((dotFromDirection - uOuterLimit[i]) / limitRange, 0.0, 1.0); ";
-            this.__lightCode += "  float specular = inLight * pow(dot(transformedNormal.xyz, halfVector), uShininess[i]); ";
-            this.__lightCode += "  highp float light = inLight * max(dot(transformedNormal.xyz, surfaceToLightDirection), 0.0); ";
+            this.__lightCode += "  float specular = inLight * pow(dot(transformedNormal, halfVector), uShininess[i]); ";
+            this.__lightCode += "  highp float light = inLight * max(dot(transformedNormal, surfaceToLightDirection), 0.0); ";
             this.__lightCode += "  vColor.rgb += specular * uLightColor2[i]; ";
-            this.__lightCode += "  reflectedLightColor += light * directionalLightColor; ";
+            this.__lightCode += "  reflectedLightColor += light; ";
             this.__lightCode += " }"
             this.__lightCode += " } ";
         } else {

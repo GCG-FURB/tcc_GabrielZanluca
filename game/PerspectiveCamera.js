@@ -23,6 +23,9 @@ export class PerspectiveCamera {
 		this.__matrix = mat4.create();
 		mat4.perspective(this.__projection, fovy, aspect, near, far);
 		mat4.lookAt(this.__matrix, [position.x, position.y, position.z], [0, 0, 0], [0, 1, 0]);
+		// this.__matrix[13] = position.x;
+		// this.__matrix[14] = position.y;
+		// this.__matrix[15] = position.z;
 	}
 
 	/**
@@ -64,12 +67,12 @@ export class PerspectiveCamera {
 	}
 
 	/**
-	 * @returns {Point3D} position
+	 * @returns {Number[]} position
 	 * 
 	 * @memberof PerspectiveCamera
 	 */
 	get posisition() {
-		return this.__position;
+		return [-this.__matrix[12], -this.__matrix[13], -this.__matrix[14]];
 	}
 
 	/**
@@ -109,7 +112,7 @@ export class PerspectiveCamera {
 	}
 
 	/**
-	 * @param {Point3D} posisition
+	 * @param {Number[]} posisition
 	 * 
 	 * @memberof PerspectiveCamera
 	 */

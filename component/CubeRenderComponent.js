@@ -129,7 +129,7 @@ export class CubeRenderComponent extends RenderComponent {
         varying lowp vec4 vColor;
         varying highp vec3 reflectedLightColor;
   
-        void main() {
+        void main() { 
           gl_Position = uProjectionMatrix * uCameraMatrix * uModelViewMatrix * aVertexPosition;
           reflectedLightColor = vec3(1.0,1.0,1.0);
           vColor = aVertexColor;`

@@ -2,6 +2,7 @@ import { RenderComponent } from "./RenderComponent";
 import { Game } from "../game/Game";
 import { JSUtils } from "../utils/JSUtils";
 import { mat4 } from "../libs/gl-matrix/gl-matrix";
+import { mat3 } from "../build/cube.bundle";
 
 export class SphereRenderComponent extends RenderComponent {
 
@@ -19,12 +20,13 @@ export class SphereRenderComponent extends RenderComponent {
         this.__lightDirection = undefined;
         this.__innerLimit = undefined;
         this.__outerLimit = undefined;
-        this.__radius = 2;
+        this.__radius = 1;
         this.__latitudeBands = 30;
         this.__longitudeBands = 30;
         this.__vertexPositionData = [];
         this.__normalData = [];
         this.__indexData = [];
+        this.__lineNormals = [];
     }
 
     vertexShaderSource() {
@@ -42,7 +44,7 @@ export class SphereRenderComponent extends RenderComponent {
         varying lowp vec4 vColor;
         varying highp vec3 reflectedLightColor;
   
-        void main() {
+        void main() { 
           gl_Position = uProjectionMatrix * uCameraMatrix * uModelViewMatrix * aVertexPosition;
           reflectedLightColor = vec3(1.0,1.0,1.0);
           vColor = aVertexColor;`
@@ -80,6 +82,7 @@ export class SphereRenderComponent extends RenderComponent {
 
         this.__vertexPositionData = [];
         this.__normalData = [];
+        this.__lineNormals = [];
 
         for (let latNumber = 0; latNumber <= this.__latitudeBands; latNumber++) {
             let theta = latNumber * Math.PI / this.__latitudeBands;
@@ -97,16 +100,24 @@ export class SphereRenderComponent extends RenderComponent {
 
                 this.__normalData.push(x);
                 this.__normalData.push(y);
-                this.__normalData.push(z);
+                this.__normalData.push(-z);
+
+                this.__lineNormals.push(x);
+                this.__lineNormals.push(y);
+                this.__lineNormals.push(z);
+                this.__lineNormals.push((this.__radius + 0.5) * x);
+                this.__lineNormals.push((this.__radius + 0.5) * y);
+                this.__lineNormals.push((this.__radius + 0.5) * z);
 
                 this.__vertexPositionData.push(this.__radius * x);
                 this.__vertexPositionData.push(this.__radius * y);
-                this.__vertexPositionData.push(this.__radius * z);
+                this.__vertexPositionData.push(this.__radius * -z);
                 //this.__vertexPositionData.push(1.0);
             }
    
         }
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.__vertexPositionData), gl.STATIC_DRAW);
+        console.log(this.__normalData);
         this.__vertexNomralAttribute = 2;
 
         this.__indexData = [];
@@ -134,7 +145,6 @@ export class SphereRenderComponent extends RenderComponent {
         this.__projectionMatrix = gl.getUniformLocation(this.__program, 'uProjectionMatrix');
 
         this.__cameraMatrix = gl.getUniformLocation(this.__program, 'uCameraMatrix');
-
 
         this.__normalBuffer =  gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, this.__normalBuffer);
@@ -201,10 +211,10 @@ export class SphereRenderComponent extends RenderComponent {
 
         let normalMatrix = mat4.create();
 
-        mat4.invert(normalMatrix, viewMatrix);
+        mat4.invert(normalMatrix, viewMatrix);        
         mat4.transpose(normalMatrix, normalMatrix);
         context.uniformMatrix4fv(this.__normalMatrix, false, normalMatrix);
-        context.uniform3fv(this.__cameraPosAttributeLocation, camera.posisition.toVector());
+        context.uniform3fv(this.__cameraPosAttributeLocation, camera.posisition);
         {
             let numComponents = 3;
             let type = context.FLOAT;
@@ -242,6 +252,8 @@ export class SphereRenderComponent extends RenderComponent {
             let offset = 0;
             let vertexCount = this.__indexData.length;
             let type = context.UNSIGNED_SHORT;
+            let size =  this.__lineNormals.length / 3;
+            // context.drawArrays(context.LINES, 0, size)
             context.drawElements(context.TRIANGLES, vertexCount, type, offset);
         }
         this.renderChild(context, viewMatrix);

@@ -41,7 +41,7 @@ export class TriangleRenderComponent extends RenderComponent {
     onLoad() {
         super.onLoad();
         let game =  new Game();
-        let gl = game.canvas;
+        let gl = game.context;
 
         this.__program = JSUtils.createProgram(this.vertexShader, this.fragmentShader);
         this.__positionAttributeLocation = gl.getAttribLocation(this.__program, "a_position");
