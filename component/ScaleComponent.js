@@ -10,6 +10,9 @@ export class ScaleComponent extends Component{
     constructor({owner}) {
         super({owner : owner});
         this.__scale = vec3.create();
+        this.__scale[0] = 1;
+        this.__scale[1] = 1;
+        this.__scale[2] = 1;
     }
     
     get x() {

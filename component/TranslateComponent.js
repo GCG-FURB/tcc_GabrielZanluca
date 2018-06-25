@@ -15,6 +15,7 @@ export class TranslateComponent extends Component{
 
     set translation(translation){
         vec3.set(this.__translation, translation[0], translation[1], translation[2]);
+        this.translate(this.owner.matrix);
     }
 
     get translation() {

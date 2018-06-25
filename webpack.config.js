@@ -3,8 +3,9 @@ var path = require('path');
 
  module.exports = {
      entry: {
-        cube: './app/main2.js',
-        triangle: './app/main.js'
+        /** put your file location here */
+        performance : "./app/performance.js",
+        exemploMon : "./app/exemploMon.js"
      },
      output: {
         path: path.resolve(__dirname, 'build'),

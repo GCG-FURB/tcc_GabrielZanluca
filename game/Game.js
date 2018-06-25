@@ -1,15 +1,29 @@
-import {Scene} from "./Scene";
+import { Scene } from "./Scene";
 import { ComponentList } from "../utils/ComponentList";
 import { RenderSystem } from "../system/RenderSystem";
 import { mat4 } from "../libs/gl-matrix/gl-matrix";
 import { LogicSystem } from "../system/LogicSystem";
+import { KeySystem } from "../system/KeySystem";
 
 let instace = undefined;
-
+/**
+ * 
+ * 
+ * @export
+ * @class Game
+ * @author Gabriel Zanluca
+ */
 export class Game {
-    constructor(canvas, scene, camera) {
+    /**
+     * Creates an instance of Game.
+     * @param {WebGLRenderingContext} context 
+     * @param {Scene} scene 
+     * @param {any} camera 
+     * @memberof Game
+     */
+    constructor(context = undefined, scene  = undefined, camera  = undefined) {
         if (!instace) {
-            this.__canvas = canvas;
+            this.__context = context;
             this.__scene = scene;
             this.__listComponents = new ComponentList();
             this.__requestAnimFrame = undefined;
@@ -24,15 +38,43 @@ export class Game {
         return instace;
     }
 
-    get canvas() {
-        return this.__canvas;
+    /**
+     *
+     * @returns {ComponentList}
+     * @readonly
+     * @memberof Game
+     */
+    get listComponents() {
+        return this.__listComponents;
     }
 
+    /**
+     * @return {WebGLRenderingContext}
+     * 
+     * @readonly
+     * @memberof Game
+     */
+    get context() {
+        return this.__context;
+    }
+
+    /**
+     * 
+     *@return {Scene} 
+     * @readonly
+     * @memberof Game
+     */
     get scene() {
         return this.__scene;
     }
 
-    get projection(){
+    /**
+     * 
+     *@returns {number[]} 
+     * @readonly
+     * @memberof Game
+     */
+    get projection() {
         return this.__projection;
     }
 
@@ -42,11 +84,15 @@ export class Game {
 
     startGameLoop() {
         let Loop = () => {
-            this.__requestAnimFrame = window.requestAnimationFrame (Loop);
+            this.__requestAnimFrame = window.requestAnimationFrame(Loop);
             this.gameLoop();
         };
-        
+
         Loop();
+
+        window.addEventListener("keypress", KeySystem.fireKeyPressListener);
+        window.addEventListener("keydown", KeySystem.fireKeyDownListener);
+        window.addEventListener("keyup", KeySystem.fireKeyUpListner);
     }
 
     stopGame() {
@@ -57,19 +103,26 @@ export class Game {
     }
 
     gameLoop() {
-        let deltaTime = (Date.now() - this.__lastUpdateTime) / 1000;
         //if (this.__paused) {
-            this.updateGame(deltaTime);
-            this.renderGame();
+        this.renderGame();
+        let now = Date.now();
+        let deltaTime = (now - this.__lastUpdateTime) / 1000;
+        this.updateGame(deltaTime);
         //}
         this.__lastUpdateTime = Date.now();
     }
 
+    /**
+     * 
+     * 
+     * @param {number} deltaTime 
+     * @memberof Game
+     */
     updateGame(deltaTime) {
         LogicSystem.fireUpdateListener(deltaTime);
     }
 
-    renderGame(){
+    renderGame() {
         RenderSystem.fireRenderListener();
     }
 }
