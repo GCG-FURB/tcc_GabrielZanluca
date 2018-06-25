@@ -2,15 +2,14 @@ import { RenderComponent } from "./RenderComponent";
 import { Game } from "../game/Game";
 import { JSUtils } from "../utils/JSUtils";
 import { mat4 } from "../libs/gl-matrix/gl-matrix";
-import { mat3 } from "../build/cube.bundle";
 
 export class SphereRenderComponent extends RenderComponent {
 
-    constructor({owner}) {
-        super({owner :  owner});
+    constructor({ owner }) {
+        super({ owner: owner });
         this.__indexBuffer = undefined;
-        this.__numberOfFace = 31;
-        this.__numberOfVertexPerFace = 31;
+        this.__numberOfFace = owner.latitudeBands + 1;
+        this.__numberOfVertexPerFace = 3;
         this.__normalMatrix = undefined;
         this.__lightPosition = undefined;
         this.__lightColor = undefined;
@@ -20,13 +19,14 @@ export class SphereRenderComponent extends RenderComponent {
         this.__lightDirection = undefined;
         this.__innerLimit = undefined;
         this.__outerLimit = undefined;
-        this.__radius = 1;
-        this.__latitudeBands = 30;
-        this.__longitudeBands = 30;
+        this.__radius = owner.radius;
+        this.__latitudeBands = owner.latitudeBands;
+        this.__longitudeBands = owner.longitudeBands;
         this.__vertexPositionData = [];
         this.__normalData = [];
         this.__indexData = [];
         this.__lineNormals = [];
+        this.__numberOfVertex = (this.__latitudeBands + 1) * (this.__latitudeBands + 1);
     }
 
     vertexShaderSource() {
@@ -48,12 +48,12 @@ export class SphereRenderComponent extends RenderComponent {
           gl_Position = uProjectionMatrix * uCameraMatrix * uModelViewMatrix * aVertexPosition;
           reflectedLightColor = vec3(1.0,1.0,1.0);
           vColor = aVertexColor;`
-          + this.__lightCode +
-         `}`;
+            + this.__lightCode +
+            `}`;
     };
 
 
-    fragmentShaderSource(){
+    fragmentShaderSource() {
         return `varying lowp vec4 vColor;
 
         varying highp vec3 reflectedLightColor;
@@ -65,13 +65,13 @@ export class SphereRenderComponent extends RenderComponent {
         }`;
     };
 
-    onLoad(){
+    onLoad() {
         super.onLoad();
-        
+
         let game = new Game();
         let gl = game.context;
 
-        if (this.__program){
+        if (this.__program) {
             gl.deleteProgram(this.__program);
         }
         this.__program = JSUtils.createProgram(this.vertexShader, this.fragmentShader);
@@ -88,9 +88,9 @@ export class SphereRenderComponent extends RenderComponent {
             let theta = latNumber * Math.PI / this.__latitudeBands;
             let sinTheta = Math.sin(theta);
             let cosTheta = Math.cos(theta);
-            
-            for (let longNumber = 0; longNumber <= this.__longitudeBands; longNumber++){
-                let phi = longNumber * 2 * Math.PI/ this.__longitudeBands;
+
+            for (let longNumber = 0; longNumber <= this.__longitudeBands; longNumber++) {
+                let phi = longNumber * 2 * Math.PI / this.__longitudeBands;
                 let sinPhi = Math.sin(phi);
                 let cosPhi = Math.cos(phi);
 
@@ -112,18 +112,16 @@ export class SphereRenderComponent extends RenderComponent {
                 this.__vertexPositionData.push(this.__radius * x);
                 this.__vertexPositionData.push(this.__radius * y);
                 this.__vertexPositionData.push(this.__radius * -z);
-                //this.__vertexPositionData.push(1.0);
             }
-   
+
         }
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.__vertexPositionData), gl.STATIC_DRAW);
-        console.log(this.__normalData);
         this.__vertexNomralAttribute = 2;
 
         this.__indexData = [];
         for (let latNumber = 0; latNumber < this.__latitudeBands; latNumber++) {
             for (let longNumber = 0; longNumber < this.__longitudeBands; longNumber++) {
-                let first = (latNumber * (this.__longitudeBands + 1)) + longNumber   
+                let first = (latNumber * (this.__longitudeBands + 1)) + longNumber
                 let second = first + this.__longitudeBands + 1;
                 this.__indexData.push(first);
                 this.__indexData.push(second);
@@ -133,7 +131,7 @@ export class SphereRenderComponent extends RenderComponent {
                 this.__indexData.push(second);
                 this.__indexData.push(second + 1);
                 this.__indexData.push(first + 1);
-            }                
+            }
         }
 
         this.__indexBuffer = gl.createBuffer();
@@ -146,7 +144,7 @@ export class SphereRenderComponent extends RenderComponent {
 
         this.__cameraMatrix = gl.getUniformLocation(this.__program, 'uCameraMatrix');
 
-        this.__normalBuffer =  gl.createBuffer();
+        this.__normalBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, this.__normalBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.__normalData), gl.STATIC_DRAW);
 
@@ -154,7 +152,7 @@ export class SphereRenderComponent extends RenderComponent {
 
         this.__cameraPosAttributeLocation = gl.getUniformLocation(this.__program, 'u_viewWorldPosition');;
 
-        if (game.scene.lights.length > 0){
+        if (game.scene.lights.length > 0) {
             this.__lightColor = gl.getUniformLocation(this.__program, 'uLightColor');
             this.__lightColor2 = gl.getUniformLocation(this.__program, 'uLightColor2');
             this.__lightPosition = gl.getUniformLocation(this.__program, 'uLightPosition');
@@ -163,8 +161,7 @@ export class SphereRenderComponent extends RenderComponent {
             this.__lightDirection = gl.getUniformLocation(this.__program, 'uLightDirection');
             this.__innerLimit = gl.getUniformLocation(this.__program, 'uInnerLimit');
             this.__outerLimit = gl.getUniformLocation(this.__program, 'uOuterLimit');
-            //console.log(gl.getShaderSource(this.vertexShader));
-        }         
+        }
     }
 
     onRender(context, projctionMareix) {
@@ -211,10 +208,10 @@ export class SphereRenderComponent extends RenderComponent {
 
         let normalMatrix = mat4.create();
 
-        mat4.invert(normalMatrix, viewMatrix);        
+        mat4.invert(normalMatrix, viewMatrix);
         mat4.transpose(normalMatrix, normalMatrix);
         context.uniformMatrix4fv(this.__normalMatrix, false, normalMatrix);
-        context.uniform3fv(this.__cameraPosAttributeLocation, camera.posisition);
+        context.uniform3fv(this.__cameraPosAttributeLocation, camera.position.toVector());
         {
             let numComponents = 3;
             let type = context.FLOAT;
@@ -252,7 +249,7 @@ export class SphereRenderComponent extends RenderComponent {
             let offset = 0;
             let vertexCount = this.__indexData.length;
             let type = context.UNSIGNED_SHORT;
-            let size =  this.__lineNormals.length / 3;
+            let size = this.__lineNormals.length / 3;
             // context.drawArrays(context.LINES, 0, size)
             context.drawElements(context.TRIANGLES, vertexCount, type, offset);
         }

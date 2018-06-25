@@ -6,8 +6,19 @@ export class LogicSystem {
     static fireUpdateListener (deltaTime) {
         let game = new Game();
        
-        if (game.scene) {
-            for (let gameObject of game.scene.gameObjectList) {
+        for (let key in game.listComponents) {
+            let  component = game.listComponents[key];
+            component.onUpdate(deltaTime);
+        }
+
+        let scene = game.scene;
+
+        if (scene) {
+            for (let key in scene.listComponent){
+                let component = scene.listComponent[key];
+                component.onUpdate(deltaTime);
+            }
+            for (let gameObject of scene.gameObjectList) {
                 if (gameObject instanceof GameObject){
                     for (let index in gameObject.listComponents) {
                         let component = gameObject.listComponents[index];
@@ -18,6 +29,15 @@ export class LogicSystem {
                     LogicSystem.updateChild(gameObject.child, deltaTime);
                 }
             }  
+        }
+
+        let camera = game.camera;
+
+        if (camera){
+            for (let key in camera.listComponent) {
+                let component = camera.listComponent[key];
+                component.onUpdate(deltaTime);
+            }
         }
     }
 

@@ -41,8 +41,8 @@ let l3 = new DirectionalLight({color : white, position : new Point3D(5, 0, 10)})
 let l4 = new DirectionalLight({color : white, position : new Point3D(5, 0, 10)});
 let lp = new PointLight({position : new Point3D(20, 30, 50), shininess : 11.9, secondColor : red, color : red});
 let sl = new SpotLight({position : new Point3D(0, 10, 10), color : white, innerLimit : 1, outerLimit : 2, target : new Point3D(0, 0, 0)});
-scene.addLight(sl);
-// scene.addLight(l2);
+// scene.addLight(sl);
+scene.addLight(l2);
 // scene.addLight(l3);
 // scene.addLight(l4);
 

@@ -25,6 +25,7 @@ export class RenderComponent extends Component {
         this.__normalBuffer = undefined;
         this.__lightCode = "";
         this.__cameraPosAttributeLocation = undefined;
+        this.__numberOfVertex = 0;
         //this.initialize();
     }
 
@@ -62,7 +63,6 @@ export class RenderComponent extends Component {
             this.__lightCode += "  highp vec3 surfaceWorldPosition = (uModelViewMatrix * aVertexPosition).xyz; "
             this.__lightCode += "  highp vec3 v_surfaceToLight = uLightPosition[i] - surfaceWorldPosition; "
             this.__lightCode += "  highp vec3 transformedNormal = mat3(uNormalMatrix) * aVertexNormal; ";
-            // this.__lightCode += "  highp vec3 u_viewWorldPosition = vec3(-0.21, 5.54, 7.09); "
             this.__lightCode += "  highp vec3 surfaceToLightDirection = normalize(v_surfaceToLight); ";
             this.__lightCode += "  highp vec3 v_surfaceToView = u_viewWorldPosition - surfaceWorldPosition; ";
             this.__lightCode += "  highp vec3 surfaceToViewDirection = normalize(v_surfaceToView); ";
@@ -136,11 +136,11 @@ export class RenderComponent extends Component {
 
         this.__vertexColors = [];
 
-        for (let i = 0; i < this.__numberOfFace; i++) {
+        for (let i = 0; i < this.__numberOfVertex; i++) {
             const c = [color.r, color.g, color.b, color.a];
-            for (let j = 0; j < this.__numberOfVertexPerFace; j++) {
+            // for (let j = 0; j < this.__numberOfVertexPerFace; j++) {
                 this.__vertexColors = this.__vertexColors.concat(c);                
-            }            
+            // }            
         }
 
         this.__colorLocation = gl.getAttribLocation(this.__program, "aVertexColor");
@@ -159,17 +159,24 @@ export class RenderComponent extends Component {
     colorFace(face, color){
         if (!color) {
             let r = this.__vertexColors[(face * this.__ColorChanelNumber * this.__numberOfVertexPerFace)];
-            let g = this.__vertexColors[(face * 4 * 4) + 1];
-            let b = this.__vertexColors[(face * 4 * 4) + 2];
-            let a = this.__vertexColors[(face * 4 * 4) + 3];
+            let g = this.__vertexColors[(face * this.__ColorChanelNumber * this.__numberOfVertexPerFace) + 1];
+            let b = this.__vertexColors[(face * this.__ColorChanelNumber * this.__numberOfVertexPerFace) + 2];
+            let a = this.__vertexColors[(face * this.__ColorChanelNumber * this.__numberOfVertexPerFace) + 3];
             let c = new Color({r, g, b, a});
             return c;
         }
         else {
-            this.__vertexColors.splice(face * 4 * 4, 4 * 4, color.r, color.g, color.b, 1,
-                                                            color.r, color.g, color.b, 1,
-                                                            color.r, color.g, color.b, 1,
-                                                            color.r, color.g, color.b, 1);
+            let newColor = [];
+            for (let i = 0; i < this.__numberOfVertexPerFace; i++) {
+                newColor.push(color.r, color.g, color.b, color.a);
+            }
+
+            Array.prototype.splice.apply(this.__vertexColors, [face * this.__ColorChanelNumber * this.__numberOfVertexPerFace,
+                                                               this.__ColorChanelNumber * this.__numberOfVertexPerFace].concat(newColor))
+
+            // this.__vertexColors.splice.apply(face * this.__ColorChanelNumber * this.__numberOfVertexPerFace, 
+            //                                   this.__ColorChanelNumber * this.__numberOfVertexPerFace, 
+            //                                   newColor);
             
             let game = new Game();
             let gl = game.context;
@@ -189,15 +196,15 @@ export class RenderComponent extends Component {
      */
     colorVertex(vertex, color){
         if (!color){
-            let r = this.__vertexColors[(vertex * 4)];
-            let g = this.__vertexColors[(vertex * 4) + 1];
-            let b = this.__vertexColors[(vertex * 4) + 2];
-            let a = this.__vertexColors[(vertex * 4) + 3];
+            let r = this.__vertexColors[(vertex * this.__ColorChanelNumber)];
+            let g = this.__vertexColors[(vertex * this.__ColorChanelNumber) + 1];
+            let b = this.__vertexColors[(vertex * this.__ColorChanelNumber) + 2];
+            let a = this.__vertexColors[(vertex * this.__ColorChanelNumber) + 3];
             let c = new Color({r, g, b, a});
             return c;
         }
         else {
-            this.__vertexColors.splice(vertex * 4, 4, color.r, color.g, color.b, 1);
+            this.__vertexColors.splice(vertex * this.__ColorChanelNumber, this.__ColorChanelNumber, color.r, color.g, color.b, color.a);
 
             let game = new Game();
             let gl = game.context;

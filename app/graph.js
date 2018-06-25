@@ -32,9 +32,9 @@ cube.rotation.onUpdate = (deltaTime) => {
     cube.rotation.z = 2 * deltaTime;
 }
 
-// cubeChild.rotation.onUpdate = (deltaTime) => {
-//     cubeChild.rotation.z = 2 * deltaTime;
-// }
+cubeChild.rotation.onUpdate = (deltaTime) => {
+    cubeChild.rotation.z = 2 * deltaTime;
+}
 
 // cubeChild2.rotation.onUpdate = (deltaTime) => {
 //     cubeChild2.rotation.z = 2 * deltaTime;
@@ -52,9 +52,9 @@ cubeChild3.translate.y = 3;
 
 cube.translate.y = 1;
 cube.translate.z = -5;
-cube.addGameOdbject(cubeChild);
-cube.addGameOdbject(cubeChild2);
-cubeChild.addGameOdbject(cubeChild3);
+cube.addGameObject(cubeChild);
+cube.addGameObject(cubeChild2);
+cubeChild.addGameObject(cubeChild3);
 
 scene.addGameObject(cube);
 

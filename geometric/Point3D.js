@@ -18,4 +18,8 @@ export class Point3D extends Point2D{
     toVector(){
         return [this.x, this.y, this.z];
     }
+
+    toVectorI(){
+        return [-this.x, -this.y, -this.z];
+    }
 }

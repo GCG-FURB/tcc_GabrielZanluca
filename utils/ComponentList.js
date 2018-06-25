@@ -14,7 +14,10 @@ export class ComponentList extends Array {
      * @memberof ComponentList
      */
     addComponent(component) {
-        this[component.tag] = component;
+        if (component instanceof Component)
+            this[component.tag] = component;
+        else
+            console.error("Parament not is a component!");
     }
 
     contains(component) {

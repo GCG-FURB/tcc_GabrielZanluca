@@ -3,6 +3,7 @@ import { ComponentList } from "../utils/ComponentList";
 import { RenderSystem } from "../system/RenderSystem";
 import { mat4 } from "../libs/gl-matrix/gl-matrix";
 import { LogicSystem } from "../system/LogicSystem";
+import { KeySystem } from "../system/KeySystem";
 
 let instace = undefined;
 /**
@@ -35,6 +36,16 @@ export class Game {
         }
 
         return instace;
+    }
+
+    /**
+     *
+     * @returns {ComponentList}
+     * @readonly
+     * @memberof Game
+     */
+    get listComponents() {
+        return this.__listComponents;
     }
 
     /**
@@ -78,6 +89,10 @@ export class Game {
         };
 
         Loop();
+
+        window.addEventListener("keypress", KeySystem.fireKeyPressListener);
+        window.addEventListener("keydown", KeySystem.fireKeyDownListener);
+        window.addEventListener("keyup", KeySystem.fireKeyUpListner);
     }
 
     stopGame() {
@@ -88,10 +103,11 @@ export class Game {
     }
 
     gameLoop() {
-        let deltaTime = (Date.now() - this.__lastUpdateTime) / 1000;
         //if (this.__paused) {
-        this.updateGame(deltaTime);
         this.renderGame();
+        let now = Date.now();
+        let deltaTime = (now - this.__lastUpdateTime) / 1000;
+        this.updateGame(deltaTime);
         //}
         this.__lastUpdateTime = Date.now();
     }

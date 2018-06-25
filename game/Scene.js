@@ -1,5 +1,6 @@
 import { GameObject } from "../gameObject/GameObject";
 import { Light } from "../Light/Light";
+import { ComponentList } from "../utils/ComponentList";
 
 /**
  * 
@@ -15,7 +16,12 @@ export class Scene {
      */
     constructor() {
         this.__gameObjectList = new Array();
+        this.__listComponents = new ComponentList();
         this.__lights = new Array();
+    }
+
+    get listComponents() {
+        return this.__listComponents
     }
 
     /**
@@ -91,7 +97,7 @@ export class Scene {
      */
     removeGameObject(gameObject) {
         let index = this.__gameObjectList.findIndex(g => g == gameObject);
-
+        
         this.__gameObjectList.splice(index, 1);
     }
 

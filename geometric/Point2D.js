@@ -44,4 +44,12 @@ export class Point2D {
     set y(y) {
         this.__y = y
     }
+
+    toVector(){
+        return [this.x, this.y];
+    }
+
+    toVectorI(){
+        return [-this.x, -this.y];
+    }
 }

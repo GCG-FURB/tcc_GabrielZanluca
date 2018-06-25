@@ -3,15 +3,9 @@ var path = require('path');
 
  module.exports = {
      entry: {
-        /*cubesOrtho: './app/cubesOrtho.js',
-        cubesPerspective: './app/cubesPerspective.js',
-        cubesSpotLighting : './app/cubesSpotLighting.js',
-        cube : "./app/main2.js",
-        triangle: './app/main.js',*/
-        cubesDirectionalLight : "./app/cubesDirectionalLight.js",
-        /*cubesPointLight : "./app/cubesPointLight.js",
-        graph : "./app/graph.js",*/
-        sphere : "./app/SpherePerspective.js"
+        /** put your file location here */
+        performance : "./app/performance.js",
+        exemploMon : "./app/exemploMon.js"
      },
      output: {
         path: path.resolve(__dirname, 'build'),

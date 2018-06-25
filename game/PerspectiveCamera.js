@@ -1,5 +1,6 @@
 import { Point3D } from "../geometric/Point3D";
 import { mat4 } from "../libs/gl-matrix/gl-matrix";
+import { ComponentList } from "../utils/ComponentList";
 
 /**
  * 
@@ -13,19 +14,19 @@ export class PerspectiveCamera {
 	 * Creates an instance of PerspectiveCamera.
 	 * @memberof PerspectiveCamera
 	 */
-	constructor({ aspect = 1, near = 0, far = 0, fovy = 0, position = new Point3D(0, 0, 0) }) {
+	constructor({ aspect = 1, near = 0, far = 0, fovy = 0, position = new Point3D(0, 0, 0), target = new Point3D(0,0,0), up = new Point3D(0, 1, 0) }) {
 		this.__near = near;
 		this.__far = far;
 		this.__aspect = aspect;
 		this.__fovy = fovy;
 		this.__position = position;
+		this.__target = target;
+		this.__up = up;
 		this.__projection = mat4.create();
 		this.__matrix = mat4.create();
 		mat4.perspective(this.__projection, fovy, aspect, near, far);
-		mat4.lookAt(this.__matrix, [position.x, position.y, position.z], [0, 0, 0], [0, 1, 0]);
-		// this.__matrix[13] = position.x;
-		// this.__matrix[14] = position.y;
-		// this.__matrix[15] = position.z;
+		mat4.lookAt(this.__matrix, [position.x, position.y, position.z], [target.x, target.y, target.y], [up.x, up.y, up.z]);
+		this.__listComponents = new ComponentList();
 	}
 
 	/**
@@ -67,12 +68,12 @@ export class PerspectiveCamera {
 	}
 
 	/**
-	 * @returns {Number[]} position
+	 * @returns {Point3D} position
 	 * 
 	 * @memberof PerspectiveCamera
 	 */
-	get posisition() {
-		return [-this.__matrix[12], -this.__matrix[13], -this.__matrix[14]];
+	get position() {
+		return this.__position;
 	}
 
 	/**
@@ -93,6 +94,18 @@ export class PerspectiveCamera {
 		return this.__fovy;
 	}
 
+	get target() {
+		return this.__target;
+	}
+
+	get up() {
+		return this.__up;
+	}
+
+	get listComponents() {
+		return this.__listComponents
+	}
+
 	/**
 	 * @param {number} near
 	 * 
@@ -100,6 +113,7 @@ export class PerspectiveCamera {
 	 */
 	set near(near) {
 		this.__near = near;
+		this.updateValues();
 	}
 
 	/**
@@ -109,15 +123,17 @@ export class PerspectiveCamera {
 	 */
 	set far(far) {
 		this.__far = far;
+		this.updateValues();
 	}
 
 	/**
-	 * @param {Number[]} posisition
+	 * @param {Point3D} position
 	 * 
 	 * @memberof PerspectiveCamera
 	 */
-	set posisition(posisition) {
-		this.__position = posisition;
+	set position(position) {
+		this.__position = position;
+		this.updateValues();
 	}
 
 	/**
@@ -126,7 +142,8 @@ export class PerspectiveCamera {
 	 * @memberof PerspectiveCamera
 	 */
 	set aspect(aspect) {
-		this.__aspect = aspect;
+		this.__aspect = aspect;		
+		this.updateValues();
 	}
 
 	/**
@@ -136,5 +153,21 @@ export class PerspectiveCamera {
 	 */
 	set fovy(fovy) {
 		this.__fovy = fovy;
+		this.updateValues();
+	}
+	
+	set target(target) {
+		this.__target = target;
+		this.updateValues();
+	}
+
+	set up(up) {
+		this.__up = up;
+		this.updateValues();
+	}
+
+	updateValues(){
+		mat4.perspective(this.__projection, this.fovy, this.aspect, this.near, this.far);
+		mat4.lookAt(this.__matrix, this.position.toVector(), this.target.toVector(), this.up.toVector());	
 	}
 }

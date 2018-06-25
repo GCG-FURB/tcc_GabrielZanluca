@@ -6,7 +6,7 @@ import { Color } from "../geometric/Color";
 import { CubeGameObject } from "../gameObject/CubeGameObject";
 
 let scene = new Scene();
-let camera = new PerspectiveCamera({near: 0.1, far : 500, aspect : 1, fovy : 45 * Math.PI / 180, position : new Point3D(0, 0, 15)});
+let camera = new PerspectiveCamera({near: 0.1, far : 500, aspect : 1, fovy : 45 * Math.PI / 180, position : new Point3D(0, 0, 15), target : new Point3D(0, 0, 0), up : new Point3D(0, 1, 0)});
 
 let canvas = document.getElementById("glCanvas");
 // @ts-ignore

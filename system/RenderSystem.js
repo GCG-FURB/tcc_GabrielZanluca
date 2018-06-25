@@ -4,30 +4,43 @@ import { Component } from "../component/Component";
 
 export class RenderSystem {
     static fireRenderListener(){
-        let game = new Game();
-
-        //game.canvas.viewport(0, 0, game.canvas.canvas.clientWidth, game.canvas.canvas.clientHeight);
-        // Clear the canvas
-        //game.canvas.clearColor(game.canvas.COLOR_BUFFER_BIT);
-        //game.canvas.clear(game.canvas.COLOR_BUFFER_BIT); 
+        let game = new Game(); 
         game.context.clearColor(1.0, 1.0, 1.0, 1.0);
         game.context.enable(game.context.CULL_FACE);    
         game.context.clear( game.context.COLOR_BUFFER_BIT |  game.context.DEPTH_BUFFER_BIT);
-        game.context.clearDepth(1.0);                 // Clear everything
-        game.context.enable(game.context.DEPTH_TEST);           // Enable depth testing
-        game.context.depthFunc(game.context.LEQUAL);            // Near things obscure far things  
+        game.context.clearDepth(1.0);
+        game.context.enable(game.context.DEPTH_TEST);
+        game.context.depthFunc(game.context.LEQUAL);
 
-        if (game.scene) {
-            for (let gameObject of game.scene.gameObjectList) {
-                if (gameObject instanceof GameObject){
+        for (let key in game.listComponents) {
+            let  component = game.listComponents[key];
+            component.onRender(game.context, game.projection);
+        }
+
+        let scene = game.scene;
+
+        if (scene) {
+            for (let key in scene.listComponent){
+                let component = scene.listComponent[key];
+                component.onRender(game.context, game.projection);
+            }
+            for (let gameObject of scene.gameObjectList) {
+                if (gameObject instanceof GameObject) {
                     for (let index in gameObject.listComponents) {
                         let component = gameObject.listComponents[index];
-                        if (component instanceof Component){
-                            component.onRender(game.context, game.projection);
-                        }
+                        component.onRender(game.context, game.projection);
                     }
                 }
             }  
+        }
+
+        let camera = game.camera;
+
+        if (camera){
+            for (let key in camera.listComponent) {
+                let component = camera.listComponent[key];
+                component.onRender(game.context, game.projection);
+            }
         }
     }
 

@@ -145,12 +145,6 @@ export class Component {
 
     onDestroy() { }
 
-    onStickMoved(value, stick, direction) { }
-
-    onButtonReleased(button) { }
-
-    onButtonPressed(button) { }
-
     get tag() {
         return "COMPONENT";
     }

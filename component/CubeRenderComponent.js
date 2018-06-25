@@ -2,13 +2,6 @@ import { RenderComponent } from "./RenderComponent";
 import { JSUtils } from "../utils/JSUtils";
 import { Game } from "../game/Game";
 import { mat4, vec3, mat3 } from "../libs/gl-matrix/gl-matrix";
-import { TranslateComponent } from "./TranslateComponent";
-import { RotateComponent } from "./RotateComponent";
-import { ScaleComponent } from "./ScaleComponent";
-import { Color } from "../geometric/Color";
-import { GameObject } from "../gameObject/GameObject";
-import { CubeGameObject } from "../gameObject/CubeGameObject";
-import { Point3D } from "../geometric/Point3D";
 
 // position of each face of the cube
 const vertices = [
@@ -112,6 +105,7 @@ export class CubeRenderComponent extends RenderComponent {
         this.__lightDirection = undefined;
         this.__innerLimit = undefined;
         this.__outerLimit = undefined;
+        this.__numberOfVertex = vertices.length/3;
     }
 
     vertexShaderSource() {
@@ -250,7 +244,7 @@ export class CubeRenderComponent extends RenderComponent {
         mat4.invert(normalMatrix, viewMatrix);
         mat4.transpose(normalMatrix, normalMatrix);
         context.uniformMatrix4fv(this.__normalMatrix, false, normalMatrix);
-        context.uniform3fv(this.__cameraPosAttributeLocation, camera.posisition.toVector());
+        context.uniform3fv(this.__cameraPosAttributeLocation, camera.position.toVector());
         {
             let numComponents = 3;
             let type = context.FLOAT;
