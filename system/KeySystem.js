@@ -14,8 +14,8 @@ export class KeySystem{
         let scene = game.scene;
 
         if (scene) {
-            for (let key in scene.listComponent){
-                let component = scene.listComponent[key];
+            for (let key in scene.listComponents){
+                let component = scene.listComponents[key];
                 component.onKeyUp(event.keyCode);
             }
             for (let gameObject of scene.gameObjectList) {
@@ -64,8 +64,8 @@ export class KeySystem{
         let scene = game.scene;
 
         if (scene) {
-            for (let key in scene.listComponent){
-                let component = scene.listComponent[key];
+            for (let key in scene.listComponents){
+                let component = scene.listComponents[key];
                 component.onKeyDown(event.keyCode);
             }
             for (let gameObject of scene.gameObjectList) {
@@ -114,8 +114,8 @@ export class KeySystem{
         let scene = game.scene;
 
         if (scene) {
-            for (let key in scene.listComponent){
-                let component = scene.listComponent[key];
+            for (let key in scene.listComponents){
+                let component = scene.listComponents[key];
                 component.onKeyPress(event.keyCode);
             }
             for (let gameObject of scene.gameObjectList) {

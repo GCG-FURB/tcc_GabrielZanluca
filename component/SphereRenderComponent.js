@@ -7,25 +7,15 @@ export class SphereRenderComponent extends RenderComponent {
 
     constructor({ owner }) {
         super({ owner: owner });
-        this.__indexBuffer = undefined;
-        this.__numberOfFace = owner.latitudeBands + 1;
-        this.__numberOfVertexPerFace = 3;
-        this.__normalMatrix = undefined;
-        this.__lightPosition = undefined;
-        this.__lightColor = undefined;
-        this.__lightColor2 = undefined;
-        this.__lightType = undefined;
-        this.__shininess = undefined;
-        this.__lightDirection = undefined;
-        this.__innerLimit = undefined;
-        this.__outerLimit = undefined;
-        this.__radius = owner.radius;
-        this.__latitudeBands = owner.latitudeBands;
-        this.__longitudeBands = owner.longitudeBands;
         this.__vertexPositionData = [];
         this.__normalData = [];
         this.__indexData = [];
         this.__lineNormals = [];
+        this.__numberOfFace = owner.latitudeBands + 1;
+        this.__numberOfVertexPerFace = 3;
+        this.__radius = owner.radius;
+        this.__latitudeBands = owner.latitudeBands;
+        this.__longitudeBands = owner.longitudeBands;
         this.__numberOfVertex = (this.__latitudeBands + 1) * (this.__latitudeBands + 1);
     }
 
@@ -164,8 +154,8 @@ export class SphereRenderComponent extends RenderComponent {
         }
     }
 
-    onRender(context, projctionMareix) {
-        super.onRender(context, projctionMareix);
+    onRender(context, projectionMatrix) {
+        super.onRender(context, projectionMatrix);
         let camera = new Game().camera;
 
         {
@@ -200,7 +190,7 @@ export class SphereRenderComponent extends RenderComponent {
         mat4.multiply(matTemp, camera.projection, camera.matrix);
         //console.log(matTemp);
         let viewMatrix = mat4.create();
-        mat4.multiply(viewMatrix, projctionMareix, this.__owner.matrix);
+        mat4.multiply(viewMatrix, projectionMatrix, this.__owner.matrix);
 
         context.uniformMatrix4fv(this.__projectionMatrix, false, camera.projection);
         context.uniformMatrix4fv(this.__modelViewMatrix, false, viewMatrix);

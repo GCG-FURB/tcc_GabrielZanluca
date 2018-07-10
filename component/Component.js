@@ -128,10 +128,10 @@ export class Component {
      * 
      * 
      * @param {WebGLRenderingContext} context
-     * @param {number[]} projctionMareix  
+     * @param {number[]} projectionMatrix  
      * @memberof Component
      */
-    onRender(context, projctionMareix) { }
+    onRender(context, projectionMatrix) { }
 
     /**
      * 

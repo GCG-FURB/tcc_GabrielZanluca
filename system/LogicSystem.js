@@ -14,8 +14,8 @@ export class LogicSystem {
         let scene = game.scene;
 
         if (scene) {
-            for (let key in scene.listComponent){
-                let component = scene.listComponent[key];
+            for (let key in scene.listComponents){
+                let component = scene.listComponents[key];
                 component.onUpdate(deltaTime);
             }
             for (let gameObject of scene.gameObjectList) {

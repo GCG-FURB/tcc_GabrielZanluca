@@ -5,7 +5,7 @@ import { mat4 } from "../libs/gl-matrix/gl-matrix";
 import { LogicSystem } from "../system/LogicSystem";
 import { KeySystem } from "../system/KeySystem";
 
-let instace = undefined;
+let INSTACE = undefined;
 /**
  * 
  * 
@@ -22,7 +22,7 @@ export class Game {
      * @memberof Game
      */
     constructor(context = undefined, scene  = undefined, camera  = undefined) {
-        if (!instace) {
+        if (!INSTACE) {
             this.__context = context;
             this.__scene = scene;
             this.__listComponents = new ComponentList();
@@ -30,12 +30,11 @@ export class Game {
             this.__lastUpdateTime = 0;
             this.__projection = mat4.create();
             this.__camera = camera;
-            instace = this;
+            INSTACE = this;
             this.startGameLoop();
-            //this.loadGame();
         }
 
-        return instace;
+        return INSTACE;
     }
 
     /**

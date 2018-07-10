@@ -20,6 +20,24 @@ class RotateSphere extends Component{
     }
 }
 
+function initSphere(){
+    for (let i = 0; i < 10; i++) {
+        for (let j = 0; j < 5; j++) {
+            let sphere = new SphereGameObject({ color: green, radius: 1, latitudeBands: 60, longitudeBands: 60, position : new Point3D(positionX, positionY, 0)});
+            spheres.push(sphere);
+            positionX += 2;
+        }
+        positionY -= 4
+        positionX = -30;
+    }
+    
+    for (let i = 0; i < spheres.length; i++) {
+        let component = new RotateSphere({owner :spheres[i] });
+        spheres[i].listComponents.addComponent(component);
+        scene.addGameObject(spheres[i]);
+    }
+}
+
 let scene = new Scene();
 
 let canvas = document.getElementById("glCanvas");
@@ -44,32 +62,19 @@ let directLight = new DirectionalLight({ color: white, position: new Point3D(-.2
 
 scene.addLight(directLight);
 
-let positionX = -30;
-let positionY = 15;
+var positionX = -30;
+var positionY = 15;
 
-for (let i = 0; i < 10; i++) {
-    for (let j = 0; j < 30; j++) {
-        let sphere = new SphereGameObject({ color: green, radius: 1, latitudeBands: 60, longitudeBands: 60, position : new Point3D(positionX, positionY, 0)});
-        spheres.push(sphere);
-        positionX += 2;
-    }
-    positionY -= 4
-    positionX = -30;
-}
+initSphere();
 
 let fps = new FPSComponent({owner : game});
 
-fps.onRender = function (context, projctionMareix) {
+fps.onRender = function (context, projectionMatrix) {
     let elemente = document.getElementById("FPS");
     elemente.innerHTML = "FPS: " + this.FPS;
 }
 
 game.listComponents.addComponent(fps);
 
-for (let i = 0; i < spheres.length; i++) {
-    let component = new RotateSphere({owner :spheres[i] });
-    spheres[i].listComponents.addComponent(component);
-    scene.addGameObject(spheres[i]);
-}
 
 

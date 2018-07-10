@@ -1,15 +1,3 @@
-/**
- * function createMenu(config) {
-  config = Object.assign({
-    title: 'Foo',
-    body: 'Bar',
-    buttonText: 'Baz',
-    cancellable: true
-  }, config);
-  // configuração agora é: {title: "Order", body: "Bar", buttonText: "Send", cancellable: true}
-  // ...
-}
- */
 
 export class Color {
     /**

@@ -1,6 +1,5 @@
 import { Game } from "../game/Game";
 import { GameObject } from "../gameObject/GameObject";
-import { Component } from "../component/Component";
 
 export class RenderSystem {
     static fireRenderListener(){
@@ -20,8 +19,8 @@ export class RenderSystem {
         let scene = game.scene;
 
         if (scene) {
-            for (let key in scene.listComponent){
-                let component = scene.listComponent[key];
+            for (let key in scene.listComponents){
+                let component = scene.listComponents[key];
                 component.onRender(game.context, game.projection);
             }
             for (let gameObject of scene.gameObjectList) {

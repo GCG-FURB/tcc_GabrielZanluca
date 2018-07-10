@@ -54,7 +54,7 @@ export class TriangleRenderComponent extends RenderComponent {
         this.__projectionMatrix = gl.getUniformLocation(this.__program, 'uProjectionMatrix');
     };
 
-    onRender(gl, projctionMareix){
+    onRender(gl, projectionMatrix){
         
         let camera = new Game().camera;
 

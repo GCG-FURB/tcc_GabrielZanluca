@@ -4,7 +4,7 @@ import { Game } from "../game/Game";
 import { mat4, vec3, mat3 } from "../libs/gl-matrix/gl-matrix";
 
 // position of each face of the cube
-const vertices = [
+const VERTICES = [
     // Front face
     -1.0, -1.0, 1.0,
     1.0, -1.0, 1.0,
@@ -42,7 +42,7 @@ const vertices = [
     -1.0, 1.0, -1.0,
 ];
 
-const indices = [
+const INDICES = [
     0, 1, 2, 0, 2, 3,    // front
     4, 5, 6, 4, 6, 7,    // back
     8, 9, 10, 8, 10, 11,   // top
@@ -51,7 +51,7 @@ const indices = [
     20, 21, 22, 20, 22, 23,   // left
 ];
 
-const vertexNormals = [
+const VERTEXNORMALS = [
     // Front
     0.0, 0.0, 1.0,
     0.0, 0.0, 1.0,
@@ -92,20 +92,10 @@ const vertexNormals = [
 export class CubeRenderComponent extends RenderComponent {
 
     constructor({ owner }) {
-        super({ owner: owner });
-        this.__indexBuffer = undefined;
+        super({ owner: owner });        
         this.__numberOfFace = 6;
         this.__numberOfVertexPerFace = 4
-        this.__normalMatrix = undefined;
-        this.__lightPosition = undefined;
-        this.__lightColor = undefined;
-        this.__lightColor2 = undefined;
-        this.__lightType = undefined;
-        this.__shininess = undefined;
-        this.__lightDirection = undefined;
-        this.__innerLimit = undefined;
-        this.__outerLimit = undefined;
-        this.__numberOfVertex = vertices.length/3;
+        this.__numberOfVertex = VERTICES.length/3;
     }
 
     vertexShaderSource() {
@@ -160,13 +150,13 @@ export class CubeRenderComponent extends RenderComponent {
         this.__positionAttributeLocation = gl.getAttribLocation(this.__program, "aVertexPosition");
         this.__positionBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, this.__positionBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(VERTICES), gl.STATIC_DRAW);
 
         this.__vertexNomralAttribute = 2;
 
         this.__indexBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer);
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(INDICES), gl.STATIC_DRAW);
 
         this.__modelViewMatrix = gl.getUniformLocation(this.__program, 'uModelViewMatrix');
 
@@ -177,7 +167,7 @@ export class CubeRenderComponent extends RenderComponent {
 
         this.__normalBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, this.__normalBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexNormals), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(VERTEXNORMALS), gl.STATIC_DRAW);
 
         this.__normalMatrix = gl.getUniformLocation(this.__program, 'uNormalMatrix');
 
@@ -197,8 +187,8 @@ export class CubeRenderComponent extends RenderComponent {
 
     }
 
-    onRender(context, projctionMareix) {
-        super.onRender(context, projctionMareix);
+    onRender(context, projectionMatrix) {
+        super.onRender(context, projectionMatrix);
         let camera = new Game().camera;
 
         {
@@ -233,7 +223,7 @@ export class CubeRenderComponent extends RenderComponent {
         mat4.multiply(matTemp, camera.projection, camera.matrix);
         //console.log(matTemp);
         let viewMatrix = mat4.create();
-        mat4.multiply(viewMatrix, projctionMareix, this.__owner.matrix);
+        mat4.multiply(viewMatrix, projectionMatrix, this.__owner.matrix);
 
         context.uniformMatrix4fv(this.__projectionMatrix, false, camera.projection);
         context.uniformMatrix4fv(this.__modelViewMatrix, false, viewMatrix);

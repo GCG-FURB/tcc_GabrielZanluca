@@ -5,7 +5,7 @@ import { SphereRenderComponent } from "../component/SphereRenderComponent";
 
 export class SphereGameObject extends GameObject {
     constructor({position =  new Point3D(0,0,0), color = new Color(), radius = 1, latitudeBands = 16, longitudeBands = 16}) {
-        super({oringin : position, color});
+        super({oringin : position, color : color});
         this.__radius = radius;
         this.__latitudeBands = latitudeBands;
         this.__longitudeBands = longitudeBands;

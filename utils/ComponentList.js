@@ -35,8 +35,8 @@ export class ComponentList extends Array {
         return this.find(c => c.id == id);
     }
 
-    removeByID(component) {
-        let indexOf = this.findIndex(c => c.id == component.id);
+    removeByID(id) {
+        let indexOf = this.findIndex(c => c.id == id);
 
         if (indexOf != -1){
             this.splice(indexOf, 1);

@@ -2,7 +2,6 @@ import {Component} from "./Component";
 import { JSUtils } from "../utils/JSUtils";
 import { Game } from "../game/Game";
 import { Color } from "../geometric/Color";
-import { GameObject } from "../gameObject/GameObject";
 
 export class RenderComponent extends Component {
     /**
@@ -26,7 +25,16 @@ export class RenderComponent extends Component {
         this.__lightCode = "";
         this.__cameraPosAttributeLocation = undefined;
         this.__numberOfVertex = 0;
-        //this.initialize();
+        this.__indexBuffer = undefined;
+        this.__normalMatrix = undefined;
+        this.__lightPosition = undefined;
+        this.__lightColor = undefined;
+        this.__lightColor2 = undefined;
+        this.__lightType = undefined;
+        this.__shininess = undefined;
+        this.__lightDirection = undefined;
+        this.__innerLimit = undefined;
+        this.__outerLimit = undefined;
     }
 
     vertexShaderSource() {
